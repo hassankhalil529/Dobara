@@ -261,6 +261,98 @@
   .footer-links{display:flex;gap:26px;list-style:none;font-size:13px;color:var(--kraft-dim);}
   .footer-note{font-family:'Space Mono',monospace;font-size:11px;color:var(--kraft-dim);opacity:0.7;}
 
+  /* ---------- add product button ---------- */
+  .btn-add-product{
+    margin-top:28px;
+    background:transparent;color:var(--mustard-soft);
+    border:1px dashed var(--glass-border);
+    padding:13px 26px;border-radius:999px;font-family:'Jost';font-size:14px;letter-spacing:0.02em;
+    cursor:pointer;display:inline-flex;align-items:center;gap:10px;
+    transition:all 0.35s cubic-bezier(.2,.8,.2,1);
+  }
+  .btn-add-product:hover{
+    background:var(--mustard);color:var(--charcoal);border-color:var(--mustard);
+    transform:translateY(-3px);box-shadow:0 14px 30px rgba(201,151,63,0.28);
+  }
+  .plus-tag{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:20px;height:20px;border-radius:50%;background:var(--mustard-soft);color:var(--charcoal);
+    font-size:14px;font-weight:700;transition:background 0.3s ease;
+  }
+  .btn-add-product:hover .plus-tag{background:var(--charcoal);color:var(--mustard-soft);}
+
+  /* ---------- empty state ---------- */
+  .empty-state{
+    grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:80px 20px;border:1px dashed var(--glass-border);border-radius:20px;
+    background:var(--glass-fill);text-align:center;
+  }
+  .empty-tag{position:relative;width:64px;height:64px;margin-bottom:22px;}
+  .empty-tag-string{position:absolute;top:-20px;left:50%;width:1px;height:20px;background:rgba(241,231,211,0.35);}
+  .empty-tag-face{
+    width:100%;height:100%;border-radius:12px;background:var(--glass-fill-2);border:1px solid var(--glass-border);
+    display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:26px;
+    color:var(--mustard-soft);animation:swing 4.5s ease-in-out infinite;transform-origin:top center;
+  }
+  .empty-title{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--kraft);}
+  .empty-text{margin-top:8px;font-size:14px;color:var(--kraft-dim);}
+
+  /* ---------- modals ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:1000;
+    background:rgba(15,12,10,0.72);backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;padding:24px;
+    opacity:0;pointer-events:none;transition:opacity 0.35s ease;
+  }
+  .modal-overlay.show{opacity:1;pointer-events:auto;}
+  .modal-card{
+    position:relative;width:100%;max-width:440px;max-height:88vh;overflow-y:auto;
+    background:var(--charcoal-2);border:1px solid var(--glass-border);border-radius:22px;
+    padding:38px 34px;box-shadow:0 40px 90px rgba(0,0,0,0.55);
+    transform:translateY(26px) scale(0.97);transition:transform 0.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .modal-overlay.show .modal-card{transform:translateY(0) scale(1);}
+  .modal-close{
+    position:absolute;top:18px;right:20px;background:none;border:none;color:var(--kraft-dim);
+    font-size:22px;cursor:pointer;line-height:1;transition:color 0.25s ease;
+  }
+  .modal-close:hover{color:var(--mustard-soft);}
+  .modal-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mustard-soft);margin-bottom:10px;}
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--kraft);}
+  .modal-sub{margin-top:6px;font-size:13px;color:var(--kraft-dim);margin-bottom:26px;}
+
+  .pw-error{
+    display:none;color:var(--rust);font-size:12px;margin:-8px 0 18px;font-family:'Space Mono',monospace;
+  }
+  .pw-error.show{display:block;}
+  .shake{animation:shake 0.4s;}
+  @keyframes shake{
+    0%,100%{transform:translateX(0);} 20%{transform:translateX(-8px);} 40%{transform:translateX(8px);}
+    60%{transform:translateX(-6px);} 80%{transform:translateX(6px);}
+  }
+
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+  .upload-box{
+    width:100%;aspect-ratio:16/10;border:1px dashed var(--glass-border);border-radius:16px;
+    background:rgba(0,0,0,0.2);margin-bottom:22px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    transition:border-color 0.3s ease, background 0.3s ease;
+  }
+  .upload-box:hover{border-color:var(--mustard-soft);background:rgba(0,0,0,0.3);}
+  .upload-box img{width:100%;height:100%;object-fit:cover;}
+  #uploadPlaceholder{color:var(--kraft-dim);font-size:13px;text-align:center;}
+  .upload-icon{font-size:28px;margin-bottom:8px;}
+
+  .card-remove{
+    position:absolute;top:14px;left:14px;width:28px;height:28px;border-radius:50%;
+    background:rgba(15,12,10,0.7);color:var(--kraft);border:1px solid var(--glass-border);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;
+    opacity:0;transition:opacity 0.25s ease, background 0.25s ease;z-index:2;
+  }
+  .card:hover .card-remove{opacity:1;}
+  .card-remove:hover{background:var(--rust);}
+
   @media(max-width:900px){
     nav ul{display:none;}
     .grid{grid-template-columns:1fr;}
@@ -298,7 +390,6 @@
       <p class="hero-sub">Every piece on Dobara has already lived a little — a wedding, a winter, a walk somewhere far. We just help it find its next chapter, at a fraction of the price.</p>
       <div class="hero-cta">
         <a href="#shop" class="btn-primary">Start Thrifting →</a>
-        <a href="login.html" class="btn-ghost">Sell your closet</a>
       </div>
     </div>
     <div class="tag-wrap">
@@ -325,70 +416,83 @@
     <div class="section-eyebrow">This week's finds</div>
     <div class="section-title">Fresh off the rack</div>
     <div class="section-sub">Hand-picked, quality-checked, and priced like the good old thrift-run days.</div>
+    <button id="openAddProduct" class="btn-add-product">
+      <span class="plus-tag">+</span> Add Product
+    </button>
   </div>
-  <div class="grid">
-    <div class="card reveal">
-      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=900&auto=format&fit=crop&q=70')"></div>
-      <div class="card-price">Rs. 1,200</div>
-      <div class="card-body">
-        <div class="card-cat">Denim Jacket</div>
-        <div class="card-name">Faded Indigo Trucker</div>
-        <div class="card-meta">Size M &middot; Good condition</div>
-        <a class="card-cta">View piece →</a>
+  <div class="grid" id="productGrid">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-tag">
+        <div class="empty-tag-string"></div>
+        <div class="empty-tag-face">?</div>
       </div>
-    </div>
-    <div class="card reveal">
-      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1445205170230-053b83016050?w=900&auto=format&fit=crop&q=70')"></div>
-      <div class="card-price">Rs. 850</div>
-      <div class="card-body">
-        <div class="card-cat">Knitwear</div>
-        <div class="card-name">Rust Cable Sweater</div>
-        <div class="card-meta">Size S &middot; Like new</div>
-        <a class="card-cta">View piece →</a>
-      </div>
-    </div>
-    <div class="card reveal">
-      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=900&auto=format&fit=crop&q=70')"></div>
-      <div class="card-price">Rs. 1,600</div>
-      <div class="card-body">
-        <div class="card-cat">Outerwear</div>
-        <div class="card-name">Olive Field Coat</div>
-        <div class="card-meta">Size L &middot; Well loved</div>
-        <a class="card-cta">View piece →</a>
-      </div>
-    </div>
-    <div class="card reveal">
-      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1562157873-818bc0726f68?w=900&auto=format&fit=crop&q=70')"></div>
-      <div class="card-price">Rs. 700</div>
-      <div class="card-body">
-        <div class="card-cat">Denim</div>
-        <div class="card-name">Straight-Leg Vintage</div>
-        <div class="card-meta">Size 32 &middot; Good condition</div>
-        <a class="card-cta">View piece →</a>
-      </div>
-    </div>
-    <div class="card reveal">
-      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&auto=format&fit=crop&q=70')"></div>
-      <div class="card-price">Rs. 950</div>
-      <div class="card-body">
-        <div class="card-cat">Shirts</div>
-        <div class="card-name">Checked Flannel</div>
-        <div class="card-meta">Size M &middot; Like new</div>
-        <a class="card-cta">View piece →</a>
-      </div>
-    </div>
-    <div class="card reveal">
-      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900&auto=format&fit=crop&q=70')"></div>
-      <div class="card-price">Rs. 1,050</div>
-      <div class="card-body">
-        <div class="card-cat">Dresses</div>
-        <div class="card-name">Floral Midi Dress</div>
-        <div class="card-meta">Size S &middot; Good condition</div>
-        <a class="card-cta">View piece →</a>
-      </div>
+      <div class="empty-title">The rack is empty</div>
+      <div class="empty-text">Add your first piece and it'll show up right here.</div>
     </div>
   </div>
 </section>
+
+<!-- Password gate modal -->
+<div class="modal-overlay" id="pwOverlay">
+  <div class="modal-card" id="pwCard">
+    <button class="modal-close" onclick="closeModal('pwOverlay')">&times;</button>
+    <div class="modal-eyebrow">Owner access</div>
+    <h2 class="modal-title">Enter password</h2>
+    <p class="modal-sub">Only the shop owner can list new pieces.</p>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="pwInput" placeholder="••••••••">
+    </div>
+    <div class="pw-error" id="pwError">Wrong password — try again.</div>
+    <button class="btn-submit" onclick="checkPassword()">Unlock</button>
+  </div>
+</div>
+
+<!-- Add product modal -->
+<div class="modal-overlay" id="addOverlay">
+  <div class="modal-card" id="addCard">
+    <button class="modal-close" onclick="closeModal('addOverlay')">&times;</button>
+    <div class="modal-eyebrow">New listing</div>
+    <h2 class="modal-title">Add a product</h2>
+    <p class="modal-sub">Pick a photo from your gallery and fill in the details.</p>
+
+    <div class="upload-box" id="uploadBox" onclick="document.getElementById('photoInput').click()">
+      <img id="uploadPreview" style="display:none;">
+      <div id="uploadPlaceholder">
+        <div class="upload-icon">📷</div>
+        <div>Tap to choose a photo</div>
+      </div>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" style="display:none;">
+
+    <div class="field">
+      <label>Product name</label>
+      <input type="text" id="pName" placeholder="e.g. Faded Indigo Trucker">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Category</label>
+        <input type="text" id="pCat" placeholder="e.g. Denim Jacket">
+      </div>
+      <div class="field">
+        <label>Price (Rs.)</label>
+        <input type="text" id="pPrice" placeholder="e.g. 1200">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Size</label>
+        <input type="text" id="pSize" placeholder="e.g. M">
+      </div>
+      <div class="field">
+        <label>Condition</label>
+        <input type="text" id="pCond" placeholder="e.g. Good condition">
+      </div>
+    </div>
+
+    <button class="btn-submit" onclick="addProduct()">Add to rack</button>
+  </div>
+</div>
 
 <section id="how">
   <div class="section-head reveal">
@@ -447,9 +551,8 @@
   },{threshold:0.15});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-  // 3D tilt on product cards
-  const cards = document.querySelectorAll('.card');
-  cards.forEach(card=>{
+  // 3D tilt — applied to every product card, including ones added later
+  function attachTilt(card){
     card.addEventListener('mousemove', (e)=>{
       const r = card.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
@@ -457,7 +560,120 @@
       card.style.transform = `perspective(900px) rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-6px)`;
     });
     card.addEventListener('mouseleave', ()=>{ card.style.transform = 'perspective(900px) rotateY(0) rotateX(0) translateY(0)'; });
+  }
+  document.querySelectorAll('.card').forEach(attachTilt);
+
+  /* ---------------- Add Product flow ---------------- */
+  const OWNER_PASSWORD = 'azadkhan786';
+  let pendingPhoto = null;
+
+  function openModal(id){ document.getElementById(id).classList.add('show'); }
+  function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+  document.getElementById('openAddProduct').addEventListener('click', ()=>{
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwError').classList.remove('show');
+    openModal('pwOverlay');
   });
+
+  document.getElementById('pwInput').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') checkPassword();
+  });
+
+  function checkPassword(){
+    const val = document.getElementById('pwInput').value;
+    if(val === OWNER_PASSWORD){
+      closeModal('pwOverlay');
+      resetAddForm();
+      openModal('addOverlay');
+    } else {
+      const errorEl = document.getElementById('pwError');
+      const cardEl = document.getElementById('pwCard');
+      errorEl.classList.add('show');
+      cardEl.classList.remove('shake'); void cardEl.offsetWidth; cardEl.classList.add('shake');
+    }
+  }
+
+  function resetAddForm(){
+    pendingPhoto = null;
+    document.getElementById('photoInput').value = '';
+    document.getElementById('uploadPreview').style.display = 'none';
+    document.getElementById('uploadPlaceholder').style.display = 'block';
+    document.getElementById('pName').value = '';
+    document.getElementById('pCat').value = '';
+    document.getElementById('pPrice').value = '';
+    document.getElementById('pSize').value = '';
+    document.getElementById('pCond').value = '';
+  }
+
+  document.getElementById('photoInput').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      pendingPhoto = ev.target.result;
+      const img = document.getElementById('uploadPreview');
+      img.src = pendingPhoto;
+      img.style.display = 'block';
+      document.getElementById('uploadPlaceholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function addProduct(){
+    const name = document.getElementById('pName').value.trim();
+    const cat = document.getElementById('pCat').value.trim();
+    const price = document.getElementById('pPrice').value.trim();
+    const size = document.getElementById('pSize').value.trim();
+    const cond = document.getElementById('pCond').value.trim();
+
+    if(!pendingPhoto || !name || !price){
+      const cardEl = document.getElementById('addCard');
+      cardEl.classList.remove('shake'); void cardEl.offsetWidth; cardEl.classList.add('shake');
+      return;
+    }
+
+    const existingEmpty = document.getElementById('emptyState');
+    if(existingEmpty) existingEmpty.remove();
+
+    const card = document.createElement('div');
+    card.className = 'card reveal in';
+    card.innerHTML = `
+      <div class="card-remove" title="Remove">&times;</div>
+      <div class="card-img" style="background-image:url('${pendingPhoto}')"></div>
+      <div class="card-price">Rs. ${price}</div>
+      <div class="card-body">
+        <div class="card-cat">${cat || 'Uncategorised'}</div>
+        <div class="card-name">${name}</div>
+        <div class="card-meta">${size ? 'Size ' + size + ' &middot; ' : ''}${cond || 'Good condition'}</div>
+        <a class="card-cta">View piece →</a>
+      </div>
+    `;
+    card.querySelector('.card-remove').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      card.remove();
+      const grid = document.getElementById('productGrid');
+      if(!grid.querySelector('.card')) grid.appendChild(makeEmptyState());
+    });
+    attachTilt(card);
+    document.getElementById('productGrid').appendChild(card);
+    closeModal('addOverlay');
+  }
+
+  function makeEmptyState(){
+    const div = document.createElement('div');
+    div.className = 'empty-state';
+    div.id = 'emptyState';
+    div.innerHTML = `
+      <div class="empty-tag">
+        <div class="empty-tag-string"></div>
+        <div class="empty-tag-face">?</div>
+      </div>
+      <div class="empty-title">The rack is empty</div>
+      <div class="empty-text">Add your first piece and it'll show up right here.</div>
+    `;
+    return div;
+  }
 
   // header shrink on scroll
   const header = document.querySelector('header');
