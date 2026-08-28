@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dobara — Give Clothes a Second Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Jost:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#1E1A17;
+    --charcoal-2:#2A2420;
+    --charcoal-3:#332C26;
+    --kraft:#F1E7D3;
+    --kraft-dim:#D9CBAE;
+    --mustard:#C9973F;
+    --mustard-soft:#E0B96A;
+    --rust:#A6491F;
+    --rose:#C9847A;
+    --sage:#7C8863;
+    --glass-fill:rgba(241,231,211,0.07);
+    --glass-fill-2:rgba(241,231,211,0.12);
+    --glass-border:rgba(241,231,211,0.16);
+    --shadow-soft:0 20px 60px rgba(10,8,6,0.45);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--charcoal);
+    color:var(--kraft);
+    font-family:'Jost',sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  .display{font-family:'Bebas Neue',sans-serif;letter-spacing:0.03em;}
+  .mono{font-family:'Space Mono',monospace;}
+
+  /* ---------- ambient background blobs ---------- */
+  .blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:0.35;z-index:0;pointer-events:none;}
+  .blob-1{width:480px;height:480px;background:var(--rust);top:-120px;left:-160px;animation:drift1 26s ease-in-out infinite;}
+  .blob-2{width:420px;height:420px;background:var(--sage);bottom:-140px;right:-120px;animation:drift2 30s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(60px,40px) scale(1.15);}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-50px,-30px) scale(1.1);}}
+
+  /* ---------- nav ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 6%;
+    background:linear-gradient(to bottom, rgba(20,17,14,0.85), transparent);
+    backdrop-filter:blur(6px);
+    transition:padding 0.3s ease, background 0.3s ease;
+  }
+  .logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.08em;color:var(--kraft);}
+  .logo span{color:var(--mustard);}
+  nav ul{list-style:none;display:flex;gap:34px;align-items:center;}
+  nav a{font-size:14px;letter-spacing:0.04em;opacity:0.85;transition:opacity 0.25s ease, color 0.25s ease;position:relative;}
+  nav a:not(.btn-signin):hover{opacity:1;}
+  nav a:not(.btn-signin)::after{
+    content:'';position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--mustard);transition:width 0.3s ease;
+  }
+  nav a:not(.btn-signin):hover::after{width:100%;}
+  .btn-signin{
+    border:1px solid var(--glass-border);
+    padding:9px 20px;border-radius:999px;
+    background:var(--glass-fill);
+    backdrop-filter:blur(8px);
+    transition:all 0.3s ease;
+    font-size:13px;
+  }
+  .btn-signin:hover{background:var(--mustard);color:var(--charcoal);border-color:var(--mustard);transform:translateY(-2px);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;min-height:100vh;
+    display:flex;align-items:flex-end;
+    background:
+      linear-gradient(180deg, rgba(18,15,13,0.35) 0%, rgba(18,15,13,0.55) 55%, rgba(15,12,10,0.92) 100%),
+      url('https://images.unsplash.com/photo-1637228393246-c38a4b3d2011?fm=jpg&q=80&w=2400&auto=format&fit=crop') center 30%/cover no-repeat;
+    padding:0 6% 90px;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse at 20% 100%, rgba(166,73,31,0.25), transparent 60%);
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative;z-index:2;
+    display:flex;justify-content:space-between;align-items:flex-end;
+    width:100%;gap:40px;flex-wrap:wrap;
+  }
+  .hero-copy{max-width:620px;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.25em;
+    color:var(--mustard-soft);text-transform:uppercase;margin-bottom:18px;
+    opacity:0;animation:riseIn 0.9s 0.2s ease forwards;
+  }
+  h1.headline{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(48px,8vw,96px);
+    line-height:0.95;letter-spacing:0.01em;
+    color:var(--kraft);
+    opacity:0;animation:riseIn 0.9s 0.4s ease forwards;
+  }
+  h1.headline em{font-style:normal;color:var(--mustard);}
+  .hero-sub{
+    margin-top:22px;font-size:17px;line-height:1.7;color:var(--kraft-dim);max-width:460px;
+    opacity:0;animation:riseIn 0.9s 0.6s ease forwards;
+  }
+  .hero-cta{margin-top:34px;display:flex;gap:16px;align-items:center;opacity:0;animation:riseIn 0.9s 0.8s ease forwards;}
+  @keyframes riseIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+  .btn-primary{
+    background:var(--mustard);color:var(--charcoal);
+    padding:15px 32px;border-radius:999px;font-size:14px;font-weight:600;letter-spacing:0.03em;
+    display:inline-flex;align-items:center;gap:10px;
+    box-shadow:0 12px 30px rgba(201,151,63,0.28);
+    transition:transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease;
+  }
+  .btn-primary:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 18px 40px rgba(201,151,63,0.4);}
+  .btn-ghost{
+    border:1px solid var(--glass-border);padding:14px 26px;border-radius:999px;font-size:14px;
+    backdrop-filter:blur(8px);background:var(--glass-fill);transition:all 0.3s ease;
+  }
+  .btn-ghost:hover{background:var(--glass-fill-2);border-color:var(--mustard-soft);}
+
+  /* ---------- swinging price tag (signature element) ---------- */
+  .tag-wrap{
+    position:relative;width:150px;height:230px;flex-shrink:0;
+    perspective:800px;
+    opacity:0;animation:riseIn 1s 0.9s ease forwards;
+  }
+  .tag-string{
+    position:absolute;top:0;left:50%;width:1px;height:38px;
+    background:rgba(241,231,211,0.4);
+    transform-origin:top center;
+  }
+  .tag{
+    position:absolute;top:36px;left:50%;
+    width:130px;height:170px;
+    transform-origin:top center;
+    transform:translateX(-50%);
+    animation:swing 4.5s ease-in-out infinite;
+    transform-style:preserve-3d;
+  }
+  .tag-face{
+    width:100%;height:100%;
+    background:linear-gradient(155deg, var(--kraft), var(--kraft-dim));
+    border-radius:10px 10px 16px 16px;
+    box-shadow:var(--shadow-soft);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    border:1px solid rgba(0,0,0,0.08);
+  }
+  .tag-face::before{
+    content:'';width:14px;height:14px;border-radius:50%;
+    background:var(--charcoal);position:absolute;top:14px;
+    box-shadow:inset 0 2px 4px rgba(0,0,0,0.4);
+  }
+  .tag-face .mono{color:var(--rust);font-size:22px;font-weight:700;}
+  .tag-face .tag-label{color:var(--charcoal-3);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;}
+  @keyframes swing{
+    0%,100%{transform:translateX(-50%) rotate(-7deg);}
+    50%{transform:translateX(-50%) rotate(7deg);}
+  }
+
+  /* ---------- marquee ---------- */
+  .marquee{
+    background:var(--rust);color:var(--kraft);
+    padding:14px 0;overflow:hidden;white-space:nowrap;position:relative;z-index:2;
+  }
+  .marquee-track{display:inline-block;animation:scroll 22s linear infinite;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.12em;}
+  .marquee-track span{margin:0 28px;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ---------- sections ---------- */
+  section{position:relative;z-index:2;padding:110px 6%;}
+  .section-head{max-width:640px;margin:0 auto 60px;text-align:center;}
+  .section-eyebrow{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.2em;color:var(--mustard-soft);text-transform:uppercase;margin-bottom:14px;}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,5vw,54px);line-height:1;color:var(--kraft);}
+  .section-sub{margin-top:16px;color:var(--kraft-dim);font-size:16px;line-height:1.7;}
+
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease, transform 0.8s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- product grid ---------- */
+  .grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;}
+  .card{
+    position:relative;border-radius:20px;overflow:hidden;
+    background:var(--charcoal-2);border:1px solid var(--glass-border);
+    transform-style:preserve-3d;transition:transform 0.15s ease, box-shadow 0.4s ease;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  }
+  .card:hover{box-shadow:0 26px 60px rgba(0,0,0,0.5);}
+  .card-img{
+    width:100%;aspect-ratio:4/5;background-size:cover;background-position:center;
+    position:relative;
+  }
+  .card-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, transparent 55%, rgba(20,16,13,0.85) 100%);}
+  .card-price{
+    position:absolute;top:14px;right:14px;
+    background:var(--kraft);color:var(--charcoal);
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+    padding:6px 12px;border-radius:999px;transform:rotate(3deg);
+    box-shadow:0 6px 16px rgba(0,0,0,0.35);
+  }
+  .card-body{padding:20px 22px 24px;position:relative;z-index:1;}
+  .card-cat{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--mustard-soft);text-transform:uppercase;}
+  .card-name{font-size:19px;margin-top:8px;color:var(--kraft);}
+  .card-meta{margin-top:6px;font-size:13px;color:var(--kraft-dim);}
+  .card-cta{
+    margin-top:16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--mustard-soft);
+    border-bottom:1px solid transparent;transition:border-color 0.3s ease;
+  }
+  .card:hover .card-cta{border-color:var(--mustard-soft);}
+
+  /* ---------- how it works ---------- */
+  .steps{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+  .step{
+    background:var(--glass-fill);border:1px solid var(--glass-border);border-radius:20px;
+    padding:36px 28px;backdrop-filter:blur(10px);
+    transition:transform 0.4s ease, background 0.4s ease;
+  }
+  .step:hover{transform:translateY(-8px);background:var(--glass-fill-2);}
+  .step-num{font-family:'Bebas Neue',sans-serif;font-size:46px;color:var(--rust);line-height:1;}
+  .step-title{font-size:20px;margin-top:14px;color:var(--kraft);}
+  .step-text{margin-top:10px;font-size:14px;color:var(--kraft-dim);line-height:1.7;}
+
+  /* ---------- parallax quote band ---------- */
+  .quote-band{
+    position:relative;padding:140px 6%;text-align:center;
+    background:
+      linear-gradient(180deg, rgba(18,15,13,0.75), rgba(18,15,13,0.88)),
+      url('https://images.unsplash.com/photo-1543436115-0d6fbe97ece0?fm=jpg&q=80&w=2200&auto=format&fit=crop') center/cover fixed;
+  }
+  .quote-band blockquote{
+    font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4.2vw,46px);
+    max-width:820px;margin:0 auto;line-height:1.25;color:var(--kraft);
+  }
+  .quote-band cite{display:block;margin-top:22px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.15em;color:var(--mustard-soft);font-style:normal;}
+
+  /* ---------- newsletter / footer ---------- */
+  .cta-band{text-align:center;padding:120px 6%;}
+  .cta-band .section-title{margin-bottom:20px;}
+  .newsletter{display:flex;justify-content:center;gap:12px;margin-top:34px;flex-wrap:wrap;}
+  .newsletter input{
+    background:var(--glass-fill);border:1px solid var(--glass-border);border-radius:999px;
+    padding:15px 22px;color:var(--kraft);font-family:'Jost';min-width:280px;font-size:14px;
+    transition:border-color 0.3s ease;
+  }
+  .newsletter input:focus{outline:none;border-color:var(--mustard);}
+  .newsletter input::placeholder{color:var(--kraft-dim);}
+
+  footer{
+    border-top:1px solid var(--glass-border);
+    padding:50px 6% 34px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+  }
+  .footer-links{display:flex;gap:26px;list-style:none;font-size:13px;color:var(--kraft-dim);}
+  .footer-note{font-family:'Space Mono',monospace;font-size:11px;color:var(--kraft-dim);opacity:0.7;}
+
+  @media(max-width:900px){
+    nav ul{display:none;}
+    .grid{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr;}
+    .hero-inner{flex-direction:column;align-items:flex-start;}
+    .tag-wrap{display:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<header>
+  <div class="logo">DO<span>BARA</span></div>
+  <nav>
+    <ul>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#stories">Stories</a></li>
+      <li><a class="btn-signin" href="login.html">Sign In</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="eyebrow">Pre-loved &middot; Pre-approved</div>
+      <h1 class="headline">Give clothes<br>a <em>second</em> story.</h1>
+      <p class="hero-sub">Every piece on Dobara has already lived a little — a wedding, a winter, a walk somewhere far. We just help it find its next chapter, at a fraction of the price.</p>
+      <div class="hero-cta">
+        <a href="#shop" class="btn-primary">Start Thrifting →</a>
+        <a href="login.html" class="btn-ghost">Sell your closet</a>
+      </div>
+    </div>
+    <div class="tag-wrap">
+      <div class="tag-string"></div>
+      <div class="tag">
+        <div class="tag-face">
+          <div class="mono">Rs. 799</div>
+          <div class="tag-label">Thrifted &middot; Loved</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>SECONDHAND FIRST</span><span>&#9670;</span><span>THRIFTED WITH CARE</span><span>&#9670;</span><span>ONE OF ONE</span><span>&#9670;</span><span>WORN BEFORE, LOVED AGAIN</span><span>&#9670;</span>
+    <span>SECONDHAND FIRST</span><span>&#9670;</span><span>THRIFTED WITH CARE</span><span>&#9670;</span><span>ONE OF ONE</span><span>&#9670;</span><span>WORN BEFORE, LOVED AGAIN</span><span>&#9670;</span>
+  </div>
+</div>
+
+<section id="shop">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">This week's finds</div>
+    <div class="section-title">Fresh off the rack</div>
+    <div class="section-sub">Hand-picked, quality-checked, and priced like the good old thrift-run days.</div>
+  </div>
+  <div class="grid">
+    <div class="card reveal">
+      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=900&auto=format&fit=crop&q=70')"></div>
+      <div class="card-price">Rs. 1,200</div>
+      <div class="card-body">
+        <div class="card-cat">Denim Jacket</div>
+        <div class="card-name">Faded Indigo Trucker</div>
+        <div class="card-meta">Size M &middot; Good condition</div>
+        <a class="card-cta">View piece →</a>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1445205170230-053b83016050?w=900&auto=format&fit=crop&q=70')"></div>
+      <div class="card-price">Rs. 850</div>
+      <div class="card-body">
+        <div class="card-cat">Knitwear</div>
+        <div class="card-name">Rust Cable Sweater</div>
+        <div class="card-meta">Size S &middot; Like new</div>
+        <a class="card-cta">View piece →</a>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=900&auto=format&fit=crop&q=70')"></div>
+      <div class="card-price">Rs. 1,600</div>
+      <div class="card-body">
+        <div class="card-cat">Outerwear</div>
+        <div class="card-name">Olive Field Coat</div>
+        <div class="card-meta">Size L &middot; Well loved</div>
+        <a class="card-cta">View piece →</a>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1562157873-818bc0726f68?w=900&auto=format&fit=crop&q=70')"></div>
+      <div class="card-price">Rs. 700</div>
+      <div class="card-body">
+        <div class="card-cat">Denim</div>
+        <div class="card-name">Straight-Leg Vintage</div>
+        <div class="card-meta">Size 32 &middot; Good condition</div>
+        <a class="card-cta">View piece →</a>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&auto=format&fit=crop&q=70')"></div>
+      <div class="card-price">Rs. 950</div>
+      <div class="card-body">
+        <div class="card-cat">Shirts</div>
+        <div class="card-name">Checked Flannel</div>
+        <div class="card-meta">Size M &middot; Like new</div>
+        <a class="card-cta">View piece →</a>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900&auto=format&fit=crop&q=70')"></div>
+      <div class="card-price">Rs. 1,050</div>
+      <div class="card-body">
+        <div class="card-cat">Dresses</div>
+        <div class="card-name">Floral Midi Dress</div>
+        <div class="card-meta">Size S &middot; Good condition</div>
+        <a class="card-cta">View piece →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">Simple by design</div>
+    <div class="section-title">How Dobara works</div>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div class="step-title">Browse the rack</div>
+      <div class="step-text">Scroll through pieces sorted by size, category and condition — every listing shows real photos, no stock images.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <div class="step-title">Claim it</div>
+      <div class="step-text">Pay on delivery or via Easypaisa. One piece, one buyer — once it's yours, it's off the rack for good.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <div class="step-title">Give it a story</div>
+      <div class="step-text">Wear it, style it, make it yours. When you're done, list it back and keep the cycle going.</div>
+    </div>
+  </div>
+</section>
+
+<div class="quote-band" id="stories">
+  <blockquote class="reveal">"Bought a coat that's older than me. It fits better than anything new I've owned."</blockquote>
+  <cite>— A Dobara regular</cite>
+</div>
+
+<section class="cta-band">
+  <div class="section-head reveal" style="margin-bottom:0;">
+    <div class="section-eyebrow">Stay in the loop</div>
+    <div class="section-title">New drops, every Friday</div>
+    <div class="newsletter">
+      <input type="email" placeholder="you@example.com">
+      <a href="#" class="btn-primary">Notify me</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo" style="font-size:20px;">DO<span>BARA</span></div>
+  <ul class="footer-links">
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="login.html">Sign In</a></li>
+  </ul>
+  <div class="footer-note">MADE WITH CARE IN RAWALPINDI</div>
+</footer>
+
+<script>
+  // scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // 3D tilt on product cards
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card=>{
+    card.addEventListener('mousemove', (e)=>{
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `perspective(900px) rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-6px)`;
+    });
+    card.addEventListener('mouseleave', ()=>{ card.style.transform = 'perspective(900px) rotateY(0) rotateX(0) translateY(0)'; });
+  });
+
+  // header shrink on scroll
+  const header = document.querySelector('header');
+  window.addEventListener('scroll', ()=>{
+    if(window.scrollY > 40){ header.style.padding = '14px 6%'; header.style.background = 'rgba(20,17,14,0.92)'; }
+    else{ header.style.padding = '22px 6%'; header.style.background = 'linear-gradient(to bottom, rgba(20,17,14,0.85), transparent)'; }
+  });
+</script>
+
+</body>
+</html>
