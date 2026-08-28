@@ -363,9 +363,386 @@
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}
   }
+
+/* ===== DOBARA NEXT-LEVEL VISUAL UPGRADE ===== */
+:root{
+  --neon: #E7B86A;
+  --cream: #F7F0E3;
+  --line: rgba(247,240,227,.12);
+}
+body{
+  background:
+    radial-gradient(circle at 15% 15%, rgba(166,73,31,.13), transparent 28%),
+    radial-gradient(circle at 85% 75%, rgba(124,136,99,.10), transparent 30%),
+    var(--charcoal);
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:999;
+  opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+  mix-blend-mode:screen;
+}
+header{
+  border-bottom:1px solid transparent;
+}
+header.scrolled{
+  border-bottom-color:var(--line);
+  box-shadow:0 10px 40px rgba(0,0,0,.18);
+}
+.hero{
+  isolation:isolate;
+  overflow:hidden;
+}
+.hero::after{
+  content:"DOBARA";
+  position:absolute; z-index:1; right:-3vw; top:20%;
+  font-family:'Bebas Neue',sans-serif; font-size:clamp(100px,18vw,260px);
+  letter-spacing:.02em; color:rgba(247,240,227,.045);
+  white-space:nowrap; pointer-events:none;
+  transform:rotate(-90deg) translateX(10%);
+  transform-origin:right center;
+}
+.hero-copy{position:relative;}
+.hero-copy::before{
+  content:""; position:absolute; width:90px; height:1px; left:0; top:-28px;
+  background:var(--mustard); box-shadow:0 0 18px rgba(231,184,106,.55);
+}
+.headline{ text-wrap:balance; }
+.headline em{
+  position:relative; display:inline-block;
+  text-shadow:0 0 35px rgba(201,151,63,.16);
+}
+.headline em::after{
+  content:""; position:absolute; left:0; right:4%; bottom:-2px; height:3px;
+  background:var(--mustard); transform:skewX(-18deg) scaleX(.65);
+  transform-origin:left; opacity:.8;
+}
+.hero-sub{max-width:540px;}
+.btn-primary,.btn-ghost,.btn-signin,.btn-add-product{
+  position:relative; overflow:hidden;
+}
+.btn-primary::before,.btn-ghost::before,.btn-signin::before,.btn-add-product::before{
+  content:""; position:absolute; inset:0; transform:translateX(-110%) skewX(-18deg);
+  background:rgba(255,255,255,.18); transition:transform .55s ease;
+}
+.btn-primary:hover::before,.btn-ghost:hover::before,.btn-signin:hover::before,.btn-add-product:hover::before{
+  transform:translateX(110%) skewX(-18deg);
+}
+.marquee{
+  box-shadow:0 8px 30px rgba(0,0,0,.18);
+}
+.marquee-track span:nth-child(even){opacity:.65;}
+.section-head{position:relative;}
+.section-head::after{
+  content:"✦"; display:block; margin-top:28px; color:var(--mustard);
+  font-size:13px; opacity:.8;
+}
+.grid{gap:24px;}
+.card{
+  border-radius:24px;
+  border-color:rgba(247,240,227,.11);
+  transition:transform .22s ease, box-shadow .45s ease, border-color .35s ease;
+}
+.card::before{
+  content:""; position:absolute; inset:0; z-index:3; pointer-events:none;
+  border-radius:inherit; padding:1px;
+  background:linear-gradient(135deg,rgba(247,240,227,.25),transparent 35%,rgba(201,151,63,.12));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+}
+.card:hover{border-color:rgba(231,184,106,.32);}
+.card-img{
+  transition:transform .8s cubic-bezier(.2,.8,.2,1), filter .5s ease;
+  filter:saturate(.88);
+}
+.card:hover .card-img{
+  transform:scale(1.055);
+  filter:saturate(1.05);
+}
+.card-body{background:linear-gradient(to bottom,rgba(42,36,32,.08),rgba(42,36,32,.35));}
+.card-cta{transition:gap .3s ease,color .3s ease;}
+.card:hover .card-cta{gap:13px;color:var(--cream);}
+.step{
+  position:relative; overflow:hidden;
+}
+.step::after{
+  content:""; position:absolute; width:120px; height:120px; right:-55px; bottom:-55px;
+  border:1px solid rgba(201,151,63,.14); border-radius:50%;
+}
+.step:hover .step-num{transform:translateX(5px); color:var(--mustard-soft);}
+.step-num{transition:transform .35s ease,color .35s ease;}
+.quote-band{overflow:hidden;}
+.quote-band::before{
+  content:"“"; position:absolute; left:5%; top:12%; font-family:Georgia,serif;
+  font-size:180px; line-height:1; color:rgba(247,240,227,.06);
+}
+.quote-band blockquote{text-wrap:balance;}
+.newsletter input{
+  min-width:min(380px,80vw);
+  background:rgba(247,240,227,.045);
+}
+footer{background:rgba(0,0,0,.08);}
+.footer-links a{transition:color .25s ease, transform .25s ease;}
+.footer-links a:hover{color:var(--mustard-soft);}
+.modal-card{
+  background:
+    radial-gradient(circle at 100% 0%,rgba(201,151,63,.10),transparent 35%),
+    var(--charcoal-2);
+}
+.modal-card input,.modal-card select,.modal-card textarea{
+  width:100%; background:rgba(247,240,227,.045); border:1px solid var(--glass-border);
+  border-radius:12px; padding:13px 14px; color:var(--kraft); font-family:'Jost';
+}
+.modal-card input:focus,.modal-card select:focus,.modal-card textarea:focus{
+  outline:none; border-color:var(--mustard);
+  box-shadow:0 0 0 4px rgba(201,151,63,.08);
+}
+.field label{display:block;color:var(--kraft-dim);font-size:12px;margin-bottom:7px;}
+.field{margin-bottom:16px;}
+.btn-submit{
+  width:100%; border:0; cursor:pointer; border-radius:999px; padding:14px 20px;
+  background:var(--mustard); color:var(--charcoal); font-weight:600; font-family:'Jost';
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(201,151,63,.25);}
+.cursor-dot,.cursor-ring{
+  position:fixed; pointer-events:none; z-index:2000; border-radius:50%;
+  transform:translate(-50%,-50%); opacity:0;
+}
+.cursor-dot{width:6px;height:6px;background:var(--mustard);}
+.cursor-ring{
+  width:34px;height:34px;border:1px solid rgba(231,184,106,.55);
+  transition:width .25s ease,height .25s ease,opacity .25s ease,background .25s ease;
+}
+body.cursor-ready .cursor-dot,body.cursor-ready .cursor-ring{opacity:1;}
+.cursor-ring.hover{width:54px;height:54px;background:rgba(231,184,106,.06);}
+.scroll-progress{
+  position:fixed;left:0;top:0;height:2px;width:0;z-index:3000;
+  background:linear-gradient(90deg,var(--rust),var(--mustard-soft));
+  box-shadow:0 0 12px rgba(231,184,106,.45);
+}
+@media(max-width:900px){
+  .hero::after{display:none;}
+}
+@media(max-width:600px){
+  section{padding:85px 5%;}
+  .hero{padding:0 5% 70px;}
+  .hero-copy::before{top:-22px;}
+  .newsletter{flex-direction:column;align-items:stretch;}
+  .newsletter .btn-primary{justify-content:center;}
+}
+@media (pointer:coarse){
+  .cursor-dot,.cursor-ring{display:none;}
+}
+
+
+/* ===== DOBARA ART-DIRECTION V2 ===== */
+html{scroll-behavior:smooth}
+body{letter-spacing:-.01em}
+header{height:78px;padding:0 6%;background:rgba(18,15,13,.62);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.logo{font-size:27px}
+.hero-v2{min-height:calc(100vh - 78px);padding:110px 6% 0;display:flex;align-items:center;background:radial-gradient(circle at 15% 25%,rgba(166,73,31,.24),transparent 34%),radial-gradient(circle at 90% 80%,rgba(124,136,99,.18),transparent 32%),#171412;overflow:hidden}
+.hero-v2::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,17,14,.45),transparent 55%,rgba(20,17,14,.22));z-index:0}
+.hero-v2::after{content:"02";position:absolute;right:3%;top:8%;font-family:'Bebas Neue';font-size:16vw;color:rgba(247,240,227,.035);z-index:0;line-height:1}
+.hero-grid{width:100%;max-width:1320px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:7vw;align-items:center;position:relative;z-index:2}
+.hero-copy-v2{padding:30px 0 70px;max-width:670px}
+.hero-copy-v2 .eyebrow{margin-bottom:26px;color:var(--mustard-soft);font-size:11px;letter-spacing:.28em}
+.headline{font-size:clamp(62px,8vw,122px);line-height:.83;letter-spacing:-.01em}
+.headline em{color:var(--mustard-soft);font-style:normal}
+.hero-copy-v2 .hero-sub{font-size:17px;line-height:1.7;margin-top:30px;max-width:510px;color:rgba(241,231,211,.68)}
+.hero-copy-v2 .hero-cta{margin-top:34px}
+.hero-meta-v2{display:flex;gap:28px;margin-top:50px;padding-top:17px;border-top:1px solid var(--line);font:10px 'Space Mono';letter-spacing:.15em;color:rgba(241,231,211,.45)}
+.hero-art{height:min(690px,72vh);position:relative;min-height:530px}
+.art-main{position:absolute;inset:0 11% 7% 12%;overflow:hidden;border-radius:3px;box-shadow:0 35px 90px rgba(0,0,0,.45);transform:rotate(1.2deg)}
+.art-main img{width:100%;height:100%;object-fit:cover;filter:saturate(.75) contrast(1.05);transition:transform 1.2s cubic-bezier(.2,.8,.2,1),filter .6s ease}
+.hero-art:hover .art-main img{transform:scale(1.045);filter:saturate(.95) contrast(1.05)}
+.art-main::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(15,12,10,.72))}
+.art-label{position:absolute;left:25px;right:25px;bottom:22px;z-index:2;display:flex;justify-content:space-between;font:10px 'Space Mono';letter-spacing:.18em;color:var(--cream)}
+.art-label b{font-weight:400;color:var(--mustard-soft)}
+.art-small{position:absolute;width:24%;height:30%;overflow:hidden;border:5px solid #171412;box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.art-small img{width:100%;height:100%;object-fit:cover}
+.art-small-a{left:0;top:9%;transform:rotate(-5deg)}
+.art-small-b{right:0;bottom:0;transform:rotate(4deg)}
+.floating-note{position:absolute;right:-2%;top:12%;z-index:3;font:11px 'Space Mono';letter-spacing:.18em;line-height:1.65;color:var(--mustard-soft);text-align:right;transform:rotate(4deg)}
+.hero-bottom-line{position:absolute;left:6%;right:6%;bottom:0;height:48px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;font:9px 'Space Mono';letter-spacing:.2em;color:rgba(241,231,211,.42);z-index:3}
+.marquee{display:none}
+#shop{padding-top:120px}
+.shop-head-v2{max-width:1240px;margin:0 auto 42px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+.shop-head-v2 .section-title{text-align:left;font-size:clamp(55px,7vw,88px);line-height:.82}
+.shop-head-v2 .section-title span{color:var(--mustard-soft)}
+.shop-intro-v2{max-width:360px;text-align:right}
+.shop-intro-v2 p{font-size:14px;line-height:1.7;color:var(--kraft-dim)}
+.shop-intro-v2 .btn-add-product{margin-top:20px}
+.filter-row-v2{max-width:1240px;margin:0 auto 30px;padding:13px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;gap:27px;align-items:center;overflow:auto;white-space:nowrap;font:9px 'Space Mono';letter-spacing:.16em;color:rgba(241,231,211,.42)}
+.filter-row-v2 span{cursor:default;transition:color .25s ease}.filter-row-v2 span.active{color:var(--mustard-soft)}.filter-count{margin-left:auto;color:rgba(241,231,211,.28)}
+.grid{max-width:1240px;gap:20px}
+.empty-state{min-height:330px;padding:50px 20px;border-radius:4px;position:relative;overflow:hidden}
+.empty-state::before{content:"THE NEXT STORY STARTS HERE";position:absolute;left:28px;top:25px;font:9px 'Space Mono';letter-spacing:.2em;color:rgba(241,231,211,.25)}
+.empty-state .empty-tag{transform:scale(.82);margin-bottom:12px}
+.empty-title{font-size:31px}.empty-text{max-width:320px;text-align:center;line-height:1.6}
+.lyric-strip{min-height:390px;padding:95px 6%;display:grid;grid-template-columns:1fr 2fr 1fr;gap:50px;align-items:center;background:#E8DEC9;color:#211B17;position:relative;overflow:hidden}
+.lyric-strip::after{content:"DOBARA";position:absolute;right:-2%;bottom:-35%;font:24vw 'Bebas Neue';color:rgba(33,27,23,.055);line-height:1}
+.lyric-index,.lyric-side{font:9px 'Space Mono';letter-spacing:.16em;line-height:1.8;color:rgba(33,27,23,.48);position:relative;z-index:1}
+.lyric-side{text-align:right}
+.lyric-line{font:clamp(38px,5.2vw,72px) 'Bebas Neue';line-height:.95;letter-spacing:.01em;position:relative;z-index:1}
+.lyric-line em{font-style:normal;color:#A6491F}
+#how{background:#171412}
+.steps{max-width:1240px}
+.step{border-radius:4px;background:rgba(247,240,227,.035);min-height:260px}
+.quote-band{min-height:520px;display:flex;flex-direction:column;justify-content:center}
+.quote-band blockquote{font-size:clamp(40px,5.4vw,72px);max-width:900px}
+.cta-band{padding:150px 6%}
+.cta-band .section-title{font-size:clamp(55px,7vw,90px)}
+footer{padding:42px 6%}
+@media(max-width:900px){
+  header{height:70px}.hero-v2{min-height:auto;padding-top:120px}.hero-grid{grid-template-columns:1fr;gap:25px}.hero-copy-v2{padding-bottom:10px}.hero-art{height:620px;min-height:500px}.hero-bottom-line{display:none}.hero-meta-v2{margin-top:35px}.shop-head-v2{align-items:flex-start;flex-direction:column}.shop-intro-v2{text-align:left}.filter-count{margin-left:20px}.lyric-strip{grid-template-columns:1fr;gap:22px;min-height:420px}.lyric-side{text-align:left}.lyric-line{font-size:56px}
+}
+@media(max-width:600px){.hero-v2{padding-left:5%;padding-right:5%;padding-top:105px}.headline{font-size:clamp(58px,17vw,82px)}.hero-art{height:500px;min-height:430px}.art-main{inset:0 8% 8% 8%}.art-small{width:30%;height:28%}.floating-note{font-size:8px}.hero-meta-v2{gap:13px;font-size:8px}.shop-head-v2 .section-title{font-size:62px}.lyric-strip{padding:75px 7%}.lyric-line{font-size:49px}}
+
+
+/* ===== V3: FULL-BLEED FASHION EDITORIAL ===== */
+.hero-v2{
+  min-height:calc(100vh - 78px);
+  background:
+    linear-gradient(90deg,rgba(12,10,8,.90) 0%,rgba(12,10,8,.60) 43%,rgba(12,10,8,.28) 100%),
+    linear-gradient(180deg,rgba(12,10,8,.12),rgba(12,10,8,.68)),
+    url('https://images.unsplash.com/photo-1630778190445-d1cf61d14383?auto=format&fit=crop&fm=jpg&q=80&w=2400') center 34%/cover no-repeat;
+  position:relative;
+}
+.hero-v2::before{background:linear-gradient(90deg,rgba(12,10,8,.72),transparent 68%);}
+.hero-v2::after{content:'DOBARA';right:-1%;top:18%;font-size:19vw;color:rgba(247,240,227,.055);transform:rotate(-90deg);transform-origin:right center;}
+.hero-grid{grid-template-columns:1.05fr .95fr;gap:5vw;}
+.hero-copy-v2{padding-top:70px;}
+.hero-art{height:min(620px,70vh);}
+.art-main{inset:0 10% 8% 13%;background:#241d18;}
+.art-main img{filter:saturate(.7) contrast(1.08) brightness(.78);}
+.art-small{border-color:#181411;}
+.floating-note{color:#f0c978;}
+.hero-bottom-line{background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);}
+
+/* Make the lyric feel like a fashion campaign, not a generic quote */
+.lyric-strip-v3{
+  min-height:72vh;padding:110px 6%;display:grid;grid-template-columns:.8fr 2fr .8fr;align-items:center;gap:50px;
+  position:relative;overflow:hidden;color:#211b17;
+  background:
+    linear-gradient(90deg,rgba(238,226,204,.93),rgba(238,226,204,.78)),
+    url('https://images.unsplash.com/photo-1714583353759-ac534aae73ce?auto=format&fit=crop&fm=jpg&q=80&w=2200') center/cover;
+}
+.lyric-strip-v3::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.25),transparent 45%,rgba(166,73,31,.10));}
+.lyric-strip-v3::after{content:'SECOND\A STORY';white-space:pre;position:absolute;right:-2%;bottom:-8%;font:22vw/.72 'Bebas Neue';color:rgba(33,27,23,.055);text-align:right;}
+.lyric-v3-side{position:relative;z-index:2;font:10px 'Space Mono';letter-spacing:.18em;line-height:2;color:rgba(33,27,23,.5);}
+.lyric-v3-side.right{text-align:right;}
+.lyric-v3-main{position:relative;z-index:2;max-width:850px;}
+.lyric-v3-kicker{font:10px 'Space Mono';letter-spacing:.28em;color:#A6491F;margin-bottom:22px;}
+.lyric-v3-text{font:clamp(45px,6.4vw,92px) 'Bebas Neue';line-height:.88;letter-spacing:.005em;}
+.lyric-v3-text em{font-style:normal;color:#A6491F;}
+.lyric-v3-note{margin-top:28px;font:13px/1.8 'Jost';max-width:500px;color:rgba(33,27,23,.68);}
+
+/* Fashion imagery between sections */
+.fashion-band-v3{min-height:62vh;position:relative;display:flex;align-items:flex-end;padding:70px 6%;overflow:hidden;background:#181411;}
+.fashion-band-v3::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(18,14,11,.78),rgba(18,14,11,.18) 65%,rgba(18,14,11,.52)),url('https://images.unsplash.com/photo-1637228393246-c38a4b3d2011?auto=format&fit=crop&fm=jpg&q=80&w=2200') center/cover;filter:saturate(.78);transform:scale(1.02);}
+.fashion-band-v3 .fashion-copy{position:relative;z-index:2;max-width:700px;}
+.fashion-band-v3 .fashion-copy .eyebrow{color:#e0b96a;}
+.fashion-band-v3 h2{font:clamp(55px,8vw,110px)/.82 'Bebas Neue';margin-top:12px;}
+.fashion-band-v3 h2 span{color:#e0b96a;}
+.fashion-band-v3 p{max-width:500px;margin-top:24px;color:rgba(241,231,211,.7);line-height:1.7;}
+.fashion-stamp{position:absolute;right:7%;top:10%;z-index:2;width:120px;height:120px;border:1px solid rgba(241,231,211,.4);border-radius:50%;display:grid;place-items:center;text-align:center;font:9px/1.6 'Space Mono';letter-spacing:.15em;color:rgba(241,231,211,.7);transform:rotate(12deg);}
+
+/* Give the shop itself a subtle clothing-image atmosphere */
+#shop{background:linear-gradient(180deg,#171412 0%,rgba(23,20,18,.96) 72%,#171412 100%);position:relative;overflow:hidden;}
+#shop::before{content:'';position:absolute;width:520px;height:520px;right:-180px;top:100px;border-radius:50%;background:url('https://images.unsplash.com/photo-1714583353759-ac534aae73ce?auto=format&fit=crop&fm=jpg&q=80&w=1400') center/cover;opacity:.055;filter:blur(2px);}
+.shop-head-v2,.filter-row-v2,.grid{position:relative;z-index:2;}
+
+@media(max-width:900px){
+  .hero-v2{background-position:center;min-height:calc(100vh - 70px);}
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-art{display:none;}
+  .hero-copy-v2{padding:80px 0 100px;}
+  .lyric-strip-v3{grid-template-columns:1fr;min-height:650px;gap:25px;}
+  .lyric-v3-side.right{text-align:left;}
+  .fashion-band-v3{min-height:70vh;}
+}
+@media(max-width:600px){
+  .hero-v2{background-position:62% center;}
+  .hero-copy-v2{padding-top:65px;}
+  .lyric-strip-v3{padding:85px 7%;}
+  .lyric-v3-text{font-size:52px;}
+  .fashion-band-v3{padding:60px 6%;}
+  .fashion-stamp{width:85px;height:85px;font-size:7px;right:6%;top:7%;}
+}
+
+
+/* ===== FINAL DOBARA CLOSING LYRICS ===== */
+.final-lyrics{
+  min-height:72vh;
+  padding:120px 6% 130px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(18,15,13,.88),rgba(18,15,13,.72)),
+    url('https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=2200&q=85')
+    center/cover no-repeat;
+}
+.final-lyrics::before{
+  content:"";
+  position:absolute;
+  width:520px;height:520px;border:1px solid rgba(231,184,106,.16);
+  border-radius:50%;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 100px rgba(201,151,63,.07), inset 0 0 80px rgba(201,151,63,.04);
+}
+.final-lyrics::after{
+  content:"DOBARA";
+  position:absolute;
+  left:50%;bottom:-45px;
+  transform:translateX(-50%);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(100px,20vw,280px);
+  line-height:.7;
+  letter-spacing:.02em;
+  color:rgba(247,240,227,.035);
+  white-space:nowrap;
+}
+.lyrics-inner{position:relative;z-index:2;max-width:800px;}
+.lyrics-kicker{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:.32em;
+  color:var(--mustard-soft);margin-bottom:28px;
+}
+.lyrics-line{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(42px,7vw,82px);
+  line-height:.92;
+  letter-spacing:.015em;
+  color:var(--cream);
+}
+.lyrics-line.accent{
+  color:var(--mustard-soft);
+  margin-top:7px;
+}
+.lyrics-small{
+  margin:30px auto 0;
+  font-family:'Jost',sans-serif;
+  font-size:clamp(15px,2vw,19px);
+  line-height:1.7;
+  color:var(--kraft-dim);
+  font-weight:300;
+}
+.lyrics-small span{color:var(--cream);font-weight:500;}
+@media(max-width:600px){
+  .final-lyrics{min-height:68vh;padding:90px 6%;}
+  .final-lyrics::before{width:320px;height:320px;}
+  .lyrics-small{font-size:14px;}
+}
+
 </style>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
@@ -382,26 +759,41 @@
   </nav>
 </header>
 
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-copy">
-      <div class="eyebrow">Pre-loved &middot; Pre-approved</div>
-      <h1 class="headline">Give clothes<br>a <em>second</em> story.</h1>
-      <p class="hero-sub">Every piece on Dobara has already lived a little — a wedding, a winter, a walk somewhere far. We just help it find its next chapter, at a fraction of the price.</p>
+<section class="hero hero-v2">
+  <div class="hero-noise"></div>
+  <div class="hero-grid">
+    <div class="hero-copy-v2">
+      <div class="eyebrow">Pre-loved · Pre-approved · One of one</div>
+      <h1 class="headline">WEAR IT.<br><em>LIVE IT.</em><br>PASS IT ON.</h1>
+      <p class="hero-sub">Clothes with a past, waiting for a new chapter. Curated thrift pieces from Rawalpindi — photographed honestly, priced fairly.</p>
       <div class="hero-cta">
-        <a href="#shop" class="btn-primary">Start Thrifting →</a>
+        <a href="#shop" class="btn-primary">Explore the rack <span>↘</span></a>
+        <a href="#stories" class="btn-ghost">Our philosophy</a>
       </div>
+      <div class="hero-meta-v2"><span>01 / 03</span><span>CURATED IN RWP</span><span>EST. 2026</span></div>
     </div>
-    <div class="tag-wrap">
-      <div class="tag-string"></div>
-      <div class="tag">
-        <div class="tag-face">
-          <div class="mono">Rs. 799</div>
-          <div class="tag-label">Thrifted &middot; Loved</div>
-        </div>
+    <div class="hero-art">
+      <div class="art-main">
+        <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1200&q=85" alt="Vintage clothing on a rack">
+        <div class="art-label"><span>THE RACK</span><b>01</b></div>
       </div>
+      <div class="art-small art-small-a"><img src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=700&q=85" alt="Folded thrift clothing"></div>
+      <div class="art-small art-small-b"><img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=85" alt="Vintage fashion detail"></div>
+      <div class="floating-note">GOOD<br>THINGS<br>DESERVE<br>ANOTHER<br>ROUND.</div>
     </div>
   </div>
+  <div class="hero-bottom-line"><span>SECONDHAND FIRST</span><span>✦</span><span>WORN BEFORE · LOVED AGAIN</span><span>✦</span><span>NO TWO STORIES ALIKE</span></div>
+</section>
+
+
+<section class="lyric-strip-v3" id="lyric">
+  <div class="lyric-v3-side">02 / A SECOND LIFE<br>RAWALPINDI<br>2026</div>
+  <div class="lyric-v3-main">
+    <div class="lyric-v3-kicker">A LITTLE DOBARA POETRY</div>
+    <div class="lyric-v3-text">NOT OLD.<br><em>JUST WAITING</em><br>FOR YOU.</div>
+    <p class="lyric-v3-note">Every worn seam remembers somewhere. Every faded color has seen a day. We don't sell old clothes — we pass stories forward.</p>
+  </div>
+  <div class="lyric-v3-side right">WORN BEFORE<br>LOVED AGAIN<br>ONE OF ONE ✦</div>
 </section>
 
 <div class="marquee">
@@ -412,14 +804,17 @@
 </div>
 
 <section id="shop">
-  <div class="section-head reveal">
-    <div class="section-eyebrow">This week's finds</div>
-    <div class="section-title">Fresh off the rack</div>
-    <div class="section-sub">Hand-picked, quality-checked, and priced like the good old thrift-run days.</div>
-    <button id="openAddProduct" class="btn-add-product">
-      <span class="plus-tag">+</span> Add Product
-    </button>
+  <div class="shop-head-v2 reveal">
+    <div>
+      <div class="section-eyebrow">This week's finds / 01</div>
+      <div class="section-title">Fresh off<br>the rack<span>.</span></div>
+    </div>
+    <div class="shop-intro-v2">
+      <p>Hand-picked, quality-checked, and priced like the good old thrift-run days.</p>
+      <button id="openAddProduct" class="btn-add-product"><span class="plus-tag">+</span> Add Product</button>
+    </div>
   </div>
+  <div class="filter-row-v2"><span class="active">ALL</span><span>OUTERWEAR</span><span>SHIRTS</span><span>DENIM</span><span>ACCESSORIES</span><span class="filter-count">0 PIECES</span></div>
   <div class="grid" id="productGrid">
     <div class="empty-state" id="emptyState">
       <div class="empty-tag">
@@ -494,6 +889,22 @@
   </div>
 </div>
 
+<section class="lyric-strip">
+  <div class="lyric-index">DOBARA / NOTE 01</div>
+  <div class="lyric-line">“Some things get better<br><em>the second time around.</em>”</div>
+  <div class="lyric-side">A little reminder to<br>buy less. Wear longer.<br>Pass it forward.</div>
+</section>
+
+
+<section class="fashion-band-v3">
+  <div class="fashion-copy">
+    <div class="eyebrow">THE DOBARA MOOD / 03</div>
+    <h2>STYLE HAS A<br><span>MEMORY.</span></h2>
+    <p>Soft textures. Broken-in denim. Old jackets that somehow look better the second time around. This is thrift, curated like fashion.</p>
+  </div>
+  <div class="fashion-stamp">CURATED<br>WITH CARE<br>✦<br>RWP / PK</div>
+</section>
+
 <section id="how">
   <div class="section-head reveal">
     <div class="section-eyebrow">Simple by design</div>
@@ -522,6 +933,16 @@
   <blockquote class="reveal">"Bought a coat that's older than me. It fits better than anything new I've owned."</blockquote>
   <cite>— A Dobara regular</cite>
 </div>
+
+<section class="final-lyrics" aria-label="Dobara closing message">
+  <div class="lyrics-inner">
+    <div class="lyrics-kicker">THE NEXT CHAPTER</div>
+    <div class="lyrics-line">She left the story.</div>
+    <div class="lyrics-line">You changed the wardrobe.</div>
+    <div class="lyrics-line accent">New fit. New energy.</div>
+    <div class="lyrics-small">When you wear confidence,<br>you don’t chase who left —<br><span>you notice who came closer.</span></div>
+  </div>
+</section>
 
 <section class="cta-band">
   <div class="section-head reveal" style="margin-bottom:0;">
@@ -681,6 +1102,82 @@
     if(window.scrollY > 40){ header.style.padding = '14px 6%'; header.style.background = 'rgba(20,17,14,0.92)'; }
     else{ header.style.padding = '22px 6%'; header.style.background = 'linear-gradient(to bottom, rgba(20,17,14,0.85), transparent)'; }
   });
+
+  /* ---------- premium interaction layer ---------- */
+  const progress = document.getElementById('scrollProgress');
+  const cursorDot = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
+
+  window.addEventListener('scroll', ()=>{
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = max > 0 ? `${(scrollY/max)*100}%` : '0%';
+    header.classList.toggle('scrolled', scrollY > 40);
+  }, {passive:true});
+
+  // Gentle parallax on hero background.
+  const hero = document.querySelector('.hero');
+  addEventListener('scroll', ()=>{
+    if(innerWidth > 700){
+      const y = Math.min(scrollY*.12, 90);
+      hero.style.backgroundPosition = `center calc(30% + ${y}px)`;
+    }
+  }, {passive:true});
+
+  // Stagger reveals for a more editorial feel.
+  document.querySelectorAll('.steps .step, #productGrid .card').forEach((el,i)=>{
+    el.style.transitionDelay = `${Math.min(i*70,350)}ms`;
+  });
+
+  // Prevent the newsletter demo link from jumping to the top.
+  document.querySelector('.newsletter .btn-primary')?.addEventListener('click', e=>{
+    e.preventDefault();
+    const input = document.querySelector('.newsletter input');
+    if(input && input.value.includes('@')){
+      const btn=e.currentTarget;
+      const old=btn.innerHTML;
+      btn.innerHTML='You’re on the list ✓';
+      btn.style.pointerEvents='none';
+      setTimeout(()=>{btn.innerHTML=old;btn.style.pointerEvents='';},2500);
+    } else {
+      input?.focus();
+    }
+  });
+
+
+  // V3: keep the shop count truthful as products are added/removed.
+  function updatePieceCount(){
+    const count=document.querySelector('.filter-count');
+    const n=document.querySelectorAll('#productGrid .card').length;
+    if(count) count.textContent = `${n} ${n===1?'PIECE':'PIECES'}`;
+  }
+  const originalAddProduct = addProduct;
+  addProduct = function(){ originalAddProduct(); updatePieceCount(); };
+  const originalMakeEmptyState = makeEmptyState;
+  makeEmptyState = function(){ updatePieceCount(); return originalMakeEmptyState(); };
+  updatePieceCount();
+
+
+  const finalLyrics = document.querySelector('.final-lyrics');
+  if(finalLyrics && 'IntersectionObserver' in window){
+    finalLyrics.querySelectorAll('.lyrics-line,.lyrics-small,.lyrics-kicker').forEach((el,i)=>{
+      el.style.opacity='0';
+      el.style.transform='translateY(22px)';
+      el.style.transition=`opacity .8s ease ${i*.12}s, transform .8s ease ${i*.12}s`;
+    });
+    const lyricIO = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.querySelectorAll('.lyrics-line,.lyrics-small,.lyrics-kicker').forEach(el=>{
+            el.style.opacity='1';
+            el.style.transform='translateY(0)';
+          });
+          lyricIO.unobserve(entry.target);
+        }
+      });
+    },{threshold:.2});
+    lyricIO.observe(finalLyrics);
+  }
+
 </script>
 
 </body>
