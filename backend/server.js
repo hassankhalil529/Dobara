@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+const productRoutes = require('./routes/productRoutes');
 const app = express();
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // 10mb kyunke product photos base64 mein aayengi
+app.use('/api/products', productRoutes);
 
 // MongoDB se connect
 mongoose.connect(process.env.MONGO_URI)
