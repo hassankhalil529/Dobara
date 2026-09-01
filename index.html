@@ -984,9 +984,10 @@ footer{padding:42px 6%}
   }
   document.querySelectorAll('.card').forEach(attachTilt);
 
-  /* ---------------- Add Product flow ---------------- */
-  const OWNER_PASSWORD = 'azadkhan786';
+  /* ---------------- Add Product flow (connected to backend) ---------------- */
+  const API_BASE = 'http://localhost:5000'; // change this later when backend is deployed live
   let pendingPhoto = null;
+  let enteredPassword = '';
 
   function openModal(id){ document.getElementById(id).classList.add('show'); }
   function closeModal(id){ document.getElementById(id).classList.remove('show'); }
@@ -1002,8 +1003,9 @@ footer{padding:42px 6%}
   });
 
   function checkPassword(){
-    const val = document.getElementById('pwInput').value;
-    if(val === OWNER_PASSWORD){
+    // just a UX gate on the frontend — the real check happens on the server when we submit
+    enteredPassword = document.getElementById('pwInput').value;
+    if(enteredPassword.length > 0){
       closeModal('pwOverlay');
       resetAddForm();
       openModal('addOverlay');
@@ -1041,7 +1043,7 @@ footer{padding:42px 6%}
     reader.readAsDataURL(file);
   });
 
-  function addProduct(){
+  async function addProduct(){
     const name = document.getElementById('pName').value.trim();
     const cat = document.getElementById('pCat').value.trim();
     const price = document.getElementById('pPrice').value.trim();
@@ -1054,32 +1056,80 @@ footer{padding:42px 6%}
       return;
     }
 
+    try{
+      const res = await fetch(`${API_BASE}/api/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name, category: cat, price, size, condition: cond,
+          photo: pendingPhoto, password: enteredPassword
+        })
+      });
+
+      if(res.status === 401){
+        alert('Galat password — product save nahi hua.');
+        return;
+      }
+      if(!res.ok){
+        alert('Kuch masla ho gaya, dobara try karo.');
+        return;
+      }
+
+      const savedProduct = await res.json();
+      renderProduct(savedProduct);
+      closeModal('addOverlay');
+    } catch(err){
+      alert('Backend se connect nahi ho pa raha. Check karo server chal raha hai ya nahi.');
+    }
+  }
+
+  function renderProduct(product){
     const existingEmpty = document.getElementById('emptyState');
     if(existingEmpty) existingEmpty.remove();
 
     const card = document.createElement('div');
     card.className = 'card reveal in';
+    card.dataset.id = product._id;
     card.innerHTML = `
       <div class="card-remove" title="Remove">&times;</div>
-      <div class="card-img" style="background-image:url('${pendingPhoto}')"></div>
-      <div class="card-price">Rs. ${price}</div>
+      <div class="card-img" style="background-image:url('${product.photo}')"></div>
+      <div class="card-price">Rs. ${product.price}</div>
       <div class="card-body">
-        <div class="card-cat">${cat || 'Uncategorised'}</div>
-        <div class="card-name">${name}</div>
-        <div class="card-meta">${size ? 'Size ' + size + ' &middot; ' : ''}${cond || 'Good condition'}</div>
+        <div class="card-cat">${product.category || 'Uncategorised'}</div>
+        <div class="card-name">${product.name}</div>
+        <div class="card-meta">${product.size ? 'Size ' + product.size + ' &middot; ' : ''}${product.condition || 'Good condition'}</div>
         <a class="card-cta">View piece →</a>
       </div>
     `;
-    card.querySelector('.card-remove').addEventListener('click', (e)=>{
+    card.querySelector('.card-remove').addEventListener('click', async (e)=>{
       e.stopPropagation();
+      try{
+        await fetch(`${API_BASE}/api/products/${product._id}`, { method: 'DELETE' });
+      } catch(err){ /* ignore network error on delete, still remove visually */ }
       card.remove();
       const grid = document.getElementById('productGrid');
       if(!grid.querySelector('.card')) grid.appendChild(makeEmptyState());
+      if(typeof updatePieceCount === 'function') updatePieceCount();
     });
     attachTilt(card);
     document.getElementById('productGrid').appendChild(card);
-    closeModal('addOverlay');
+    if(typeof updatePieceCount === 'function') updatePieceCount();
   }
+
+  async function loadProducts(){
+    try{
+      const res = await fetch(`${API_BASE}/api/products`);
+      const products = await res.json();
+      if(products.length > 0){
+        const existingEmpty = document.getElementById('emptyState');
+        if(existingEmpty) existingEmpty.remove();
+        products.forEach(renderProduct);
+      }
+    } catch(err){
+      console.log('Could not load products — is the backend running?');
+    }
+  }
+  loadProducts();
 
   function makeEmptyState(){
     const div = document.createElement('div');
@@ -1095,6 +1145,7 @@ footer{padding:42px 6%}
     `;
     return div;
   }
+
 
   // header shrink on scroll
   const header = document.querySelector('header');
