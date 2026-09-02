@@ -38,6 +38,114 @@
   .display{font-family:'Bebas Neue',sans-serif;letter-spacing:0.03em;}
   .mono{font-family:'Space Mono',monospace;}
 
+  /* ---------- intro splash animation ---------- */
+  .intro-overlay{
+    position:fixed;inset:0;z-index:10000;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .intro-panel{
+    position:absolute;top:0;bottom:0;width:50%;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(201,151,63,0.10), transparent 60%),
+      var(--charcoal);
+    transition:transform 1s cubic-bezier(.76,0,.24,1);
+    z-index:1;
+  }
+  .intro-panel-left{left:0;transform:translateX(0);}
+  .intro-panel-right{right:0;transform:translateX(0);}
+  .intro-overlay.intro-hide .intro-panel-left{transform:translateX(-100%);}
+  .intro-overlay.intro-hide .intro-panel-right{transform:translateX(100%);}
+  .intro-overlay.intro-hide{pointer-events:none;}
+
+  .intro-content{
+    position:relative;z-index:2;
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+    transition:opacity 0.45s ease, transform 0.45s ease;
+  }
+  .intro-overlay.intro-hide .intro-content{opacity:0;transform:scale(0.94);}
+
+  .intro-rail{
+    width:0;height:1px;background:rgba(241,231,211,0.3);margin-bottom:0;
+    animation:introRail 0.6s 0.1s ease forwards;
+  }
+  @keyframes introRail{ to{ width:190px; } }
+
+  .intro-tags-row{display:flex;gap:22px;margin:0 0 22px;}
+  .intro-tag{
+    position:relative;width:52px;height:64px;
+    transform-origin:top center;opacity:0;
+  }
+  .intro-tag-a{animation:introDrop 1.15s 0.35s cubic-bezier(.34,1.35,.4,1) forwards;}
+  .intro-tag-b{animation:introDrop 1.15s 0.5s cubic-bezier(.34,1.35,.4,1) forwards;}
+  .intro-tag-c{animation:introDrop 1.15s 0.65s cubic-bezier(.34,1.35,.4,1) forwards;}
+  .intro-tag-string{
+    position:absolute;top:-34px;left:50%;width:1px;height:34px;
+    background:rgba(241,231,211,0.35);
+  }
+  .intro-tag-face{
+    width:100%;height:100%;
+    background:linear-gradient(155deg, var(--kraft), var(--kraft-dim));
+    border-radius:8px 8px 11px 11px;
+    box-shadow:var(--shadow-soft);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+  }
+  .intro-tag-hole{
+    position:absolute;top:8px;width:8px;height:8px;border-radius:50%;
+    background:var(--charcoal);box-shadow:inset 0 2px 3px rgba(0,0,0,0.4);
+  }
+  .intro-tag-face .mono{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--rust);}
+  @keyframes introDrop{
+    0%{ transform:translateY(-90px) rotate(0deg); opacity:0; }
+    55%{ transform:translateY(5px) rotate(-10deg); opacity:1; }
+    72%{ transform:translateY(0) rotate(8deg); }
+    86%{ transform:rotate(-5deg); }
+    100%{ transform:rotate(0deg); }
+  }
+
+  .intro-logo{
+    font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,6vw,58px);letter-spacing:0.08em;
+    color:var(--kraft);
+  }
+  .intro-logo .il{
+    display:inline-block;opacity:0;transform:translateY(18px);
+    animation:introFadeUp 0.55s ease forwards;
+  }
+  .intro-logo .il.mustard{color:var(--mustard);}
+  .intro-logo .il:nth-child(1){animation-delay:1.75s;}
+  .intro-logo .il:nth-child(2){animation-delay:1.82s;}
+  .intro-logo .il:nth-child(3){animation-delay:1.89s;}
+  .intro-logo .il:nth-child(4){animation-delay:1.96s;}
+  .intro-logo .il:nth-child(5){animation-delay:2.03s;}
+  .intro-logo .il:nth-child(6){animation-delay:2.10s;}
+
+  .intro-line{
+    width:0;height:1px;background:var(--mustard-soft);margin:20px 0 14px;
+    animation:introLine 0.6s 2.5s ease forwards;
+  }
+  @keyframes introLine{ to{ width:130px; } }
+
+  .intro-sub{
+    font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.22em;color:var(--kraft-dim);
+    opacity:0;animation:introFadeUp 0.7s 2.7s ease forwards;
+    margin-bottom:26px;
+  }
+
+  .intro-progress{
+    width:130px;height:2px;border-radius:2px;background:rgba(241,231,211,0.14);overflow:hidden;
+    opacity:0;animation:introFadeUp 0.4s 2.9s ease forwards;
+  }
+  .intro-progress-bar{
+    width:0%;height:100%;background:var(--mustard);border-radius:2px;
+    animation:introProgress 1.3s 3.05s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes introProgress{ to{ width:100%; } }
+
+  @keyframes introFadeUp{ to{ opacity:1; transform:translateY(0); } }
+  @media (prefers-reduced-motion: reduce){
+    .intro-overlay{display:none;}
+  }
+
   /* ---------- ambient background blobs ---------- */
   .blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:0.35;z-index:0;pointer-events:none;}
   .blob-1{width:480px;height:480px;background:var(--rust);top:-120px;left:-160px;animation:drift1 26s ease-in-out infinite;}
@@ -345,13 +453,62 @@
   .upload-icon{font-size:28px;margin-bottom:8px;}
 
   .card-remove{
-    position:absolute;top:14px;left:14px;width:28px;height:28px;border-radius:50%;
-    background:rgba(15,12,10,0.7);color:var(--kraft);border:1px solid var(--glass-border);
-    display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;
-    opacity:0;transition:opacity 0.25s ease, background 0.25s ease;z-index:2;
+    position:absolute;top:14px;left:14px;width:30px;height:30px;border-radius:50%;
+    background:rgba(15,12,10,0.55);color:var(--kraft);border:1px solid var(--glass-border);
+    backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    opacity:0;transform:scale(0.85);
+    transition:opacity 0.25s ease, transform 0.25s cubic-bezier(.2,.8,.2,1), background 0.25s ease, color 0.25s ease;
+    z-index:2;
   }
-  .card:hover .card-remove{opacity:1;}
-  .card-remove:hover{background:var(--rust);}
+  .card:hover .card-remove{opacity:1;transform:scale(1);}
+  .card-remove:hover{background:var(--rust);color:var(--kraft);border-color:var(--rust);transform:scale(1.1);}
+
+  /* ---------- Buy Now + checkout ---------- */
+  .btn-buy-now{
+    margin-top:14px;width:100%;
+    background:var(--mustard);color:var(--charcoal);border:none;
+    padding:12px 0;border-radius:999px;font-family:'Jost';font-weight:600;font-size:13px;letter-spacing:0.03em;
+    cursor:pointer;transition:transform 0.3s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease;
+    box-shadow:0 10px 24px rgba(201,151,63,0.22);
+  }
+  .btn-buy-now:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(201,151,63,0.34);}
+
+  .checkout-summary{
+    display:flex;gap:14px;align-items:center;
+    background:rgba(0,0,0,0.2);border:1px solid var(--glass-border);border-radius:14px;
+    padding:14px;margin-bottom:24px;
+  }
+  .checkout-item{display:flex;gap:14px;align-items:center;}
+  .checkout-item img{width:58px;height:58px;object-fit:cover;border-radius:10px;flex-shrink:0;}
+  .checkout-item-name{font-size:14px;color:var(--kraft);}
+  .checkout-item-price{font-family:'Space Mono',monospace;font-size:13px;color:var(--mustard-soft);margin-top:4px;}
+
+  .payment-options{display:flex;gap:16px;margin:6px 0 20px;}
+  .payment-option{
+    display:flex;align-items:center;gap:8px;font-size:13px;color:var(--kraft-dim);cursor:pointer;
+  }
+  .payment-option input{accent-color:var(--mustard);}
+
+  .easypaisa-note{
+    display:none;
+    background:linear-gradient(155deg, rgba(201,151,63,0.14), rgba(201,151,63,0.05));
+    border:1px solid rgba(201,151,63,0.35);border-radius:14px;
+    padding:16px 18px;margin-bottom:20px;
+  }
+  .easypaisa-note.show{display:block;}
+  .easypaisa-note-title{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mustard-soft);margin-bottom:8px;}
+  .easypaisa-number{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.04em;color:var(--kraft);margin-bottom:8px;}
+  .easypaisa-note-text{font-size:12.5px;line-height:1.6;color:var(--kraft-dim);}
+
+  .order-total{
+    background:rgba(0,0,0,0.2);border:1px solid var(--glass-border);border-radius:14px;
+    padding:14px 16px;margin-bottom:22px;font-size:13px;color:var(--kraft-dim);
+  }
+  .order-total .total-line{
+    margin-top:8px;padding-top:8px;border-top:1px dashed var(--glass-border);
+    font-family:'Space Mono',monospace;font-size:15px;color:var(--mustard-soft);font-weight:700;
+  }
 
   @media(max-width:900px){
     nav ul{display:none;}
@@ -742,6 +899,37 @@ footer{padding:42px 6%}
 </style>
 </head>
 <body>
+<script>document.body.style.overflow = 'hidden';</script>
+
+<!-- Intro animation -->
+<div class="intro-overlay" id="introOverlay">
+  <div class="intro-panel intro-panel-left"></div>
+  <div class="intro-panel intro-panel-right"></div>
+  <div class="intro-content">
+    <div class="intro-rail"></div>
+    <div class="intro-tags-row">
+      <div class="intro-tag intro-tag-a">
+        <div class="intro-tag-string"></div>
+        <div class="intro-tag-face"><div class="intro-tag-hole"></div><span class="mono">S</span></div>
+      </div>
+      <div class="intro-tag intro-tag-b">
+        <div class="intro-tag-string"></div>
+        <div class="intro-tag-face"><div class="intro-tag-hole"></div><span class="mono">M</span></div>
+      </div>
+      <div class="intro-tag intro-tag-c">
+        <div class="intro-tag-string"></div>
+        <div class="intro-tag-face"><div class="intro-tag-hole"></div><span class="mono">L</span></div>
+      </div>
+    </div>
+    <div class="intro-logo">
+      <span class="il">D</span><span class="il">O</span><span class="il mustard">B</span><span class="il mustard">A</span><span class="il mustard">R</span><span class="il mustard">A</span>
+    </div>
+    <div class="intro-line"></div>
+    <div class="intro-sub">SECONDHAND &middot; CURATED &middot; RAWALPINDI</div>
+    <div class="intro-progress"><div class="intro-progress-bar"></div></div>
+  </div>
+</div>
+
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <div class="blob blob-1"></div>
@@ -833,7 +1021,7 @@ footer{padding:42px 6%}
     <button class="modal-close" onclick="closeModal('pwOverlay')">&times;</button>
     <div class="modal-eyebrow">Owner access</div>
     <h2 class="modal-title">Enter password</h2>
-    <p class="modal-sub">Only the shop owner can list new pieces.</p>
+    <p class="modal-sub" id="pwModalSub">Only the shop owner can list new pieces.</p>
     <div class="field">
       <label>Password</label>
       <input type="password" id="pwInput" placeholder="••••••••">
@@ -886,6 +1074,56 @@ footer{padding:42px 6%}
     </div>
 
     <button class="btn-submit" onclick="addProduct()">Add to rack</button>
+  </div>
+</div>
+
+<!-- Checkout modal -->
+<div class="modal-overlay" id="checkoutOverlay">
+  <div class="modal-card" id="checkoutCard">
+    <button class="modal-close" onclick="closeModal('checkoutOverlay')">&times;</button>
+    <div class="modal-eyebrow">Checkout</div>
+    <h2 class="modal-title">Confirm your order</h2>
+
+    <div class="checkout-summary" id="checkoutSummary"></div>
+
+    <div class="field">
+      <label>Full name</label>
+      <input type="text" id="buyerName" placeholder="Your name">
+    </div>
+    <div class="field">
+      <label>Phone number</label>
+      <input type="text" id="buyerPhone" placeholder="03xx-xxxxxxx">
+    </div>
+    <div class="field">
+      <label>Delivery address</label>
+      <input type="text" id="buyerAddress" placeholder="House #, street, area, city">
+    </div>
+
+    <div class="payment-options">
+      <label class="payment-option"><input type="radio" name="payment" value="COD" checked onchange="toggleEasypaisaNote()"> Cash on Delivery</label>
+      <label class="payment-option"><input type="radio" name="payment" value="Easypaisa" onchange="toggleEasypaisaNote()"> Easypaisa</label>
+    </div>
+
+    <div class="easypaisa-note" id="easypaisaNote">
+      <div class="easypaisa-note-title">Send advance to Easypaisa</div>
+      <div class="easypaisa-number">0312-5285449</div>
+      <div class="easypaisa-note-text">Please send your advance payment to this Easypaisa number, then place your order. We'll confirm your order once the payment is received.</div>
+    </div>
+
+    <div class="order-total" id="orderTotal"></div>
+
+    <button class="btn-submit" onclick="submitOrder()">Place Order</button>
+  </div>
+</div>
+
+<!-- Order success modal -->
+<div class="modal-overlay" id="orderSuccessOverlay">
+  <div class="modal-card" id="orderSuccessCard" style="text-align:center;">
+    <button class="modal-close" onclick="closeModal('orderSuccessOverlay')">&times;</button>
+    <div class="modal-eyebrow">Order placed</div>
+    <h2 class="modal-title">You're all set!</h2>
+    <p class="modal-sub">We've got your order — we'll reach out on the number you gave us to confirm delivery.</p>
+    <button class="btn-submit" onclick="closeModal('orderSuccessOverlay')">Back to shopping</button>
   </div>
 </div>
 
@@ -966,6 +1204,25 @@ footer{padding:42px 6%}
 </footer>
 
 <script>
+  // intro splash animation
+  (function(){
+    const intro = document.getElementById('introOverlay');
+    if(!intro) return;
+    const dismiss = ()=>{
+      intro.classList.add('intro-hide');
+      document.body.style.overflow = '';
+      setTimeout(()=>{ intro.style.display = 'none'; }, 1050);
+    };
+    // reduced motion: skip straight to content
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      intro.style.display = 'none';
+      document.body.style.overflow = '';
+    } else {
+      setTimeout(dismiss, 4600);
+      intro.addEventListener('click', dismiss); // let impatient visitors skip it
+    }
+  })();
+
   // scroll reveal
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
@@ -988,11 +1245,14 @@ footer{padding:42px 6%}
   const API_BASE = 'https://dobara-bx6m.onrender.com'; // live backend on Render
   let pendingPhoto = null;
   let enteredPassword = '';
+  let pendingAction = null; // { type: 'add' } or { type: 'delete', id, card }
 
   function openModal(id){ document.getElementById(id).classList.add('show'); }
   function closeModal(id){ document.getElementById(id).classList.remove('show'); }
 
   document.getElementById('openAddProduct').addEventListener('click', ()=>{
+    pendingAction = { type: 'add' };
+    document.getElementById('pwModalSub').textContent = 'Only the shop owner can list new pieces.';
     document.getElementById('pwInput').value = '';
     document.getElementById('pwError').classList.remove('show');
     openModal('pwOverlay');
@@ -1002,18 +1262,46 @@ footer{padding:42px 6%}
     if(e.key === 'Enter') checkPassword();
   });
 
-  function checkPassword(){
-    // just a UX gate on the frontend — the real check happens on the server when we submit
+  async function checkPassword(){
     enteredPassword = document.getElementById('pwInput').value;
-    if(enteredPassword.length > 0){
-      closeModal('pwOverlay');
-      resetAddForm();
-      openModal('addOverlay');
-    } else {
+    if(enteredPassword.length === 0){
       const errorEl = document.getElementById('pwError');
       const cardEl = document.getElementById('pwCard');
       errorEl.classList.add('show');
       cardEl.classList.remove('shake'); void cardEl.offsetWidth; cardEl.classList.add('shake');
+      return;
+    }
+
+    if(pendingAction && pendingAction.type === 'delete'){
+      closeModal('pwOverlay');
+      await performDelete(pendingAction.id, pendingAction.card, enteredPassword);
+      pendingAction = null;
+      return;
+    }
+
+    // default: add product
+    closeModal('pwOverlay');
+    resetAddForm();
+    openModal('addOverlay');
+  }
+
+  async function performDelete(id, card, password){
+    try{
+      const res = await fetch(`${API_BASE}/api/products/${id}?password=${encodeURIComponent(password)}`, { method: 'DELETE' });
+      if(res.status === 401){
+        alert('Galat password — product delete nahi hua.');
+        return;
+      }
+      if(!res.ok){
+        alert('Kuch masla ho gaya, dobara try karo.');
+        return;
+      }
+      card.remove();
+      const grid = document.getElementById('productGrid');
+      if(!grid.querySelector('.card')) grid.appendChild(makeEmptyState());
+      if(typeof updatePieceCount === 'function') updatePieceCount();
+    } catch(err){
+      alert('Backend se connect nahi ho pa raha.');
     }
   }
 
@@ -1091,25 +1379,39 @@ footer{padding:42px 6%}
     card.className = 'card reveal in';
     card.dataset.id = product._id;
     card.innerHTML = `
-      <div class="card-remove" title="Remove">&times;</div>
+      <div class="card-remove" title="Remove listing">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+          <path d="M10 11v6M14 11v6"></path>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+        </svg>
+      </div>
       <div class="card-img" style="background-image:url('${product.photo}')"></div>
       <div class="card-price">Rs. ${product.price}</div>
       <div class="card-body">
         <div class="card-cat">${product.category || 'Uncategorised'}</div>
         <div class="card-name">${product.name}</div>
         <div class="card-meta">${product.size ? 'Size ' + product.size + ' &middot; ' : ''}${product.condition || 'Good condition'}</div>
-        <a class="card-cta">View piece →</a>
+        <a class="card-cta" data-buy>View piece →</a>
+        <button class="btn-buy-now" data-buynow>Buy Now</button>
       </div>
     `;
-    card.querySelector('.card-remove').addEventListener('click', async (e)=>{
+    card.querySelector('[data-buy]').addEventListener('click', (e)=>{
       e.stopPropagation();
-      try{
-        await fetch(`${API_BASE}/api/products/${product._id}`, { method: 'DELETE' });
-      } catch(err){ /* ignore network error on delete, still remove visually */ }
-      card.remove();
-      const grid = document.getElementById('productGrid');
-      if(!grid.querySelector('.card')) grid.appendChild(makeEmptyState());
-      if(typeof updatePieceCount === 'function') updatePieceCount();
+      openCheckout(product);
+    });
+    card.querySelector('[data-buynow]').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      openCheckout(product);
+    });
+    card.querySelector('.card-remove').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      pendingAction = { type: 'delete', id: product._id, card };
+      document.getElementById('pwModalSub').textContent = 'Only the shop owner can remove a listing.';
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwError').classList.remove('show');
+      openModal('pwOverlay');
     });
     attachTilt(card);
     document.getElementById('productGrid').appendChild(card);
@@ -1130,6 +1432,90 @@ footer{padding:42px 6%}
     }
   }
   loadProducts();
+
+  /* ---------------- Buy Now / Checkout flow ---------------- */
+  const DELIVERY_CHARGE = 320;
+  let currentOrderProduct = null;
+
+  function toggleEasypaisaNote(){
+    const selected = document.querySelector('input[name="payment"]:checked');
+    const note = document.getElementById('easypaisaNote');
+    if(selected && selected.value === 'Easypaisa'){
+      note.classList.add('show');
+    } else {
+      note.classList.remove('show');
+    }
+  }
+
+  function openCheckout(product){
+    currentOrderProduct = product;
+    document.getElementById('checkoutSummary').innerHTML = `
+      <div class="checkout-item">
+        <img src="${product.photo}" alt="">
+        <div>
+          <div class="checkout-item-name">${product.name}</div>
+          <div class="checkout-item-price">Rs. ${product.price}</div>
+        </div>
+      </div>
+    `;
+    document.getElementById('buyerName').value = '';
+    document.getElementById('buyerPhone').value = '';
+    document.getElementById('buyerAddress').value = '';
+    document.querySelector('input[name="payment"][value="COD"]').checked = true;
+    toggleEasypaisaNote();
+    updateOrderTotal();
+    openModal('checkoutOverlay');
+  }
+
+  function updateOrderTotal(){
+    if(!currentOrderProduct) return;
+    const price = parseFloat(currentOrderProduct.price) || 0;
+    const total = price + DELIVERY_CHARGE;
+    document.getElementById('orderTotal').innerHTML = `
+      <div>Item: Rs. ${price}</div>
+      <div>Delivery: Rs. ${DELIVERY_CHARGE}</div>
+      <div class="total-line">Total: Rs. ${total}</div>
+    `;
+  }
+
+  async function submitOrder(){
+    const name = document.getElementById('buyerName').value.trim();
+    const phone = document.getElementById('buyerPhone').value.trim();
+    const address = document.getElementById('buyerAddress').value.trim();
+    const paymentEl = document.querySelector('input[name="payment"]:checked');
+    const payment = paymentEl ? paymentEl.value : 'COD';
+
+    if(!name || !phone || !address){
+      const cardEl = document.getElementById('checkoutCard');
+      cardEl.classList.remove('shake'); void cardEl.offsetWidth; cardEl.classList.add('shake');
+      return;
+    }
+
+    try{
+      const res = await fetch(`${API_BASE}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: currentOrderProduct._id,
+          productName: currentOrderProduct.name,
+          productPrice: currentOrderProduct.price,
+          productPhoto: currentOrderProduct.photo,
+          buyerName: name,
+          buyerPhone: phone,
+          buyerAddress: address,
+          paymentMethod: payment,
+        })
+      });
+      if(!res.ok){
+        alert('Order place nahi ho saka, dobara try karo.');
+        return;
+      }
+      closeModal('checkoutOverlay');
+      openModal('orderSuccessOverlay');
+    } catch(err){
+      alert('Backend se connect nahi ho pa raha. Check karo server chal raha hai ya nahi.');
+    }
+  }
 
   function makeEmptyState(){
     const div = document.createElement('div');

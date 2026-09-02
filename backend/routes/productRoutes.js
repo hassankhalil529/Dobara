@@ -30,14 +30,15 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE a product by id
+// DELETE a product by id — owner only
 router.delete('/:id', async (req, res) => {
   try {
+    if (req.query.password !== process.env.OWNER_PASSWORD) {
+      return res.status(401).json({ error: 'Wrong password' });
+    }
     await Product.findByIdAndDelete(req.params.id);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Could not delete product' });
   }
 });
-
-module.exports = router;
