@@ -6,7 +6,7 @@ const productSchema = new mongoose.Schema({
   price: { type: String, required: true },
   size: { type: String, default: '' },
   condition: { type: String, default: 'Good condition' },
-  photo: { type: String, required: true }, // base64 image string
+  photos: { type: [String], required: true }, // array of base64 image strings
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);

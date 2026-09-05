@@ -656,6 +656,56 @@ footer{background:rgba(0,0,0,.08);}
 }
 .field label{display:block;color:var(--kraft-dim);font-size:12px;margin-bottom:7px;}
 .field{margin-bottom:16px;}
+
+/* ---------- multi-photo picker ---------- */
+.photo-picker{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+.photo-thumb{position:relative;width:70px;height:70px;border-radius:10px;overflow:hidden;flex-shrink:0;}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-thumb .remove-thumb{
+  position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;
+  background:rgba(0,0,0,0.65);color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:11px;cursor:pointer;line-height:1;
+}
+.photo-add-tile{
+  width:70px;height:70px;border:1px dashed var(--glass-border);border-radius:10px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:9px;color:var(--kraft-dim);cursor:pointer;gap:2px;text-align:center;
+  transition:border-color 0.25s ease;flex-shrink:0;
+}
+.photo-add-tile:hover{border-color:var(--mustard-soft);}
+.photo-add-tile .upload-icon{font-size:16px;}
+.photo-hint{font-size:8px;opacity:0.6;}
+
+/* ---------- product card photo carousel ---------- */
+.photo-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:26px;height:26px;border-radius:50%;border:none;
+  background:rgba(15,12,10,0.55);color:var(--kraft);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+  opacity:0;transition:opacity 0.25s ease, background 0.25s ease;z-index:2;
+}
+.card:hover .photo-nav{opacity:1;}
+.photo-nav:hover{background:var(--mustard);color:var(--charcoal);}
+.photo-prev{left:10px;}
+.photo-next{right:10px;}
+.photo-dots{
+  position:absolute;bottom:10px;left:0;right:0;
+  display:flex;justify-content:center;gap:5px;z-index:2;
+}
+.photo-dot{width:5px;height:5px;border-radius:50%;background:rgba(241,231,211,0.4);transition:background 0.2s ease;}
+.photo-dot.active{background:var(--mustard-soft);}
+
+/* ---------- search bar ---------- */
+.search-row{margin:16px 0;}
+.search-input{
+  width:100%;max-width:260px;background:rgba(0,0,0,0.2);border:1px solid var(--glass-border);
+  border-radius:999px;padding:10px 16px;color:var(--kraft);font-family:'Jost';font-size:13px;
+}
+.search-input:focus{outline:none;border-color:var(--mustard-soft);}
+.search-input::placeholder{color:var(--kraft-dim);}
+
+/* ---------- filter row clickable ---------- */
+.filter-row-v2 span:not(.filter-count){cursor:pointer;}
 .btn-submit{
   width:100%; border:0; cursor:pointer; border-radius:999px; padding:14px 20px;
   background:var(--mustard); color:var(--charcoal); font-weight:600; font-family:'Jost';
@@ -999,6 +1049,9 @@ footer{padding:42px 6%}
     </div>
     <div class="shop-intro-v2">
       <p>Hand-picked, quality-checked, and priced like the good old thrift-run days.</p>
+      <div class="search-row">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search pieces by name…">
+      </div>
       <button id="openAddProduct" class="btn-add-product"><span class="plus-tag">+</span> Add Product</button>
     </div>
   </div>
@@ -1011,6 +1064,10 @@ footer{padding:42px 6%}
       </div>
       <div class="empty-title">The rack is empty</div>
       <div class="empty-text">Add your first piece and it'll show up right here.</div>
+    </div>
+    <div class="empty-state" id="noResults" style="display:none;">
+      <div class="empty-title">No matches</div>
+      <div class="empty-text">Try a different search or category.</div>
     </div>
   </div>
 </section>
@@ -1039,14 +1096,15 @@ footer{padding:42px 6%}
     <h2 class="modal-title">Add a product</h2>
     <p class="modal-sub">Pick a photo from your gallery and fill in the details.</p>
 
-    <div class="upload-box" id="uploadBox" onclick="document.getElementById('photoInput').click()">
-      <img id="uploadPreview" style="display:none;">
-      <div id="uploadPlaceholder">
+    <div class="photo-picker" id="photoPicker">
+      <div class="photo-thumbs" id="photoThumbs"></div>
+      <div class="photo-add-tile" id="photoAddTile" onclick="document.getElementById('photoInput').click()">
         <div class="upload-icon">📷</div>
-        <div>Tap to choose a photo</div>
+        <div>Add photo</div>
+        <div class="photo-hint">up to 4</div>
       </div>
     </div>
-    <input type="file" id="photoInput" accept="image/*" style="display:none;">
+    <input type="file" id="photoInput" accept="image/*" multiple style="display:none;">
 
     <div class="field">
       <label>Product name</label>
@@ -1055,7 +1113,12 @@ footer{padding:42px 6%}
     <div class="field-row">
       <div class="field">
         <label>Category</label>
-        <input type="text" id="pCat" placeholder="e.g. Denim Jacket">
+        <select id="pCat">
+          <option value="Outerwear">Outerwear</option>
+          <option value="Shirts">Shirts</option>
+          <option value="Denim">Denim</option>
+          <option value="Accessories">Accessories</option>
+        </select>
       </div>
       <div class="field">
         <label>Price (Rs.)</label>
@@ -1244,7 +1307,8 @@ footer{padding:42px 6%}
 
   /* ---------------- Add Product flow (connected to backend) ---------------- */
   const API_BASE = 'https://dobara-bx6m.onrender.com'; // live backend on Render
-  let pendingPhoto = null;
+  let pendingPhotos = [];
+  const MAX_PHOTOS = 4;
   let enteredPassword = '';
   let pendingAction = null; // { type: 'add' } or { type: 'delete', id, card }
 
@@ -1307,39 +1371,57 @@ footer{padding:42px 6%}
   }
 
   function resetAddForm(){
-    pendingPhoto = null;
+    pendingPhotos = [];
     document.getElementById('photoInput').value = '';
-    document.getElementById('uploadPreview').style.display = 'none';
-    document.getElementById('uploadPlaceholder').style.display = 'block';
+    renderPhotoThumbs();
     document.getElementById('pName').value = '';
-    document.getElementById('pCat').value = '';
+    document.getElementById('pCat').value = 'Outerwear';
     document.getElementById('pPrice').value = '';
     document.getElementById('pSize').value = '';
     document.getElementById('pCond').value = '';
   }
 
+  function renderPhotoThumbs(){
+    const wrap = document.getElementById('photoThumbs');
+    wrap.innerHTML = pendingPhotos.map((src, i) => `
+      <div class="photo-thumb">
+        <img src="${src}">
+        <div class="remove-thumb" onclick="removePendingPhoto(${i})">&times;</div>
+      </div>
+    `).join('');
+    const addTile = document.getElementById('photoAddTile');
+    addTile.style.display = pendingPhotos.length >= MAX_PHOTOS ? 'none' : 'flex';
+  }
+
+  function removePendingPhoto(i){
+    pendingPhotos.splice(i, 1);
+    renderPhotoThumbs();
+  }
+
   document.getElementById('photoInput').addEventListener('change', (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev)=>{
-      pendingPhoto = ev.target.result;
-      const img = document.getElementById('uploadPreview');
-      img.src = pendingPhoto;
-      img.style.display = 'block';
-      document.getElementById('uploadPlaceholder').style.display = 'none';
-    };
-    reader.readAsDataURL(file);
+    const files = Array.from(e.target.files).slice(0, MAX_PHOTOS - pendingPhotos.length);
+    if(files.length === 0){ e.target.value = ''; return; }
+    let loaded = 0;
+    files.forEach(file=>{
+      const reader = new FileReader();
+      reader.onload = (ev)=>{
+        pendingPhotos.push(ev.target.result);
+        loaded++;
+        if(loaded === files.length) renderPhotoThumbs();
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
   });
 
   async function addProduct(){
     const name = document.getElementById('pName').value.trim();
-    const cat = document.getElementById('pCat').value.trim();
+    const cat = document.getElementById('pCat').value;
     const price = document.getElementById('pPrice').value.trim();
     const size = document.getElementById('pSize').value.trim();
     const cond = document.getElementById('pCond').value.trim();
 
-    if(!pendingPhoto || !name || !price){
+    if(pendingPhotos.length === 0 || !name || !price){
       const cardEl = document.getElementById('addCard');
       cardEl.classList.remove('shake'); void cardEl.offsetWidth; cardEl.classList.add('shake');
       return;
@@ -1351,7 +1433,7 @@ footer{padding:42px 6%}
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name, category: cat, price, size, condition: cond,
-          photo: pendingPhoto, password: enteredPassword
+          photos: pendingPhotos, password: enteredPassword
         })
       });
 
@@ -1376,9 +1458,13 @@ footer{padding:42px 6%}
     const existingEmpty = document.getElementById('emptyState');
     if(existingEmpty) existingEmpty.remove();
 
+    const photos = (product.photos && product.photos.length) ? product.photos : (product.photo ? [product.photo] : []);
+    let photoIndex = 0;
+
     const card = document.createElement('div');
     card.className = 'card reveal in';
     card.dataset.id = product._id;
+    card.dataset.category = (product.category || 'Uncategorised').toUpperCase();
     card.innerHTML = `
       <div class="card-remove" title="Remove listing">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1388,7 +1474,13 @@ footer{padding:42px 6%}
           <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
         </svg>
       </div>
-      <div class="card-img" style="background-image:url('${product.photo}')"></div>
+      <div class="card-img" style="background-image:url('${photos[0] || ''}')">
+        ${photos.length > 1 ? `
+          <button class="photo-nav photo-prev" type="button">&#10094;</button>
+          <button class="photo-nav photo-next" type="button">&#10095;</button>
+          <div class="photo-dots">${photos.map((_, i) => `<span class="photo-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>
+        ` : ''}
+      </div>
       <div class="card-price">Rs. ${product.price}</div>
       <div class="card-body">
         <div class="card-cat">${product.category || 'Uncategorised'}</div>
@@ -1398,6 +1490,24 @@ footer{padding:42px 6%}
         <button class="btn-buy-now" data-buynow>Buy Now</button>
       </div>
     `;
+    if(photos.length > 1){
+      const imgEl = card.querySelector('.card-img');
+      const dots = card.querySelectorAll('.photo-dot');
+      const updatePhoto = ()=>{
+        imgEl.style.backgroundImage = `url('${photos[photoIndex]}')`;
+        dots.forEach((d, i) => d.classList.toggle('active', i === photoIndex));
+      };
+      card.querySelector('.photo-prev').addEventListener('click', (e)=>{
+        e.stopPropagation();
+        photoIndex = (photoIndex - 1 + photos.length) % photos.length;
+        updatePhoto();
+      });
+      card.querySelector('.photo-next').addEventListener('click', (e)=>{
+        e.stopPropagation();
+        photoIndex = (photoIndex + 1) % photos.length;
+        updatePhoto();
+      });
+    }
     card.querySelector('[data-buy]').addEventListener('click', (e)=>{
       e.stopPropagation();
       openCheckout(product);
@@ -1450,9 +1560,10 @@ footer{padding:42px 6%}
 
   function openCheckout(product){
     currentOrderProduct = product;
+    const thumb = (product.photos && product.photos[0]) || product.photo || '';
     document.getElementById('checkoutSummary').innerHTML = `
       <div class="checkout-item">
-        <img src="${product.photo}" alt="">
+        <img src="${thumb}" alt="">
         <div>
           <div class="checkout-item-name">${product.name}</div>
           <div class="checkout-item-price">Rs. ${product.price}</div>
@@ -1500,7 +1611,7 @@ footer{padding:42px 6%}
           productId: currentOrderProduct._id,
           productName: currentOrderProduct.name,
           productPrice: currentOrderProduct.price,
-          productPhoto: currentOrderProduct.photo,
+          productPhoto: (currentOrderProduct.photos && currentOrderProduct.photos[0]) || currentOrderProduct.photo || '',
           buyerName: name,
           buyerPhone: phone,
           buyerAddress: address,
@@ -1582,12 +1693,41 @@ footer{padding:42px 6%}
   });
 
 
-  // V3: keep the shop count truthful as products are added/removed.
-  function updatePieceCount(){
-    const count=document.querySelector('.filter-count');
-    const n=document.querySelectorAll('#productGrid .card').length;
-    if(count) count.textContent = `${n} ${n===1?'PIECE':'PIECES'}`;
+  // V3: keep the shop count truthful as products are added/removed, now filter-aware.
+  let activeCategory = 'ALL';
+
+  function applyFilters(){
+    const searchVal = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+    const cards = document.querySelectorAll('#productGrid .card');
+    let visibleCount = 0;
+    cards.forEach(card=>{
+      const matchesCategory = activeCategory === 'ALL' || card.dataset.category === activeCategory;
+      const nameEl = card.querySelector('.card-name');
+      const matchesSearch = !searchVal || (nameEl && nameEl.textContent.toLowerCase().includes(searchVal));
+      const visible = matchesCategory && matchesSearch;
+      card.style.display = visible ? '' : 'none';
+      if(visible) visibleCount++;
+    });
+    const countEl = document.querySelector('.filter-count');
+    if(countEl) countEl.textContent = `${visibleCount} ${visibleCount === 1 ? 'PIECE' : 'PIECES'}`;
+    const noResults = document.getElementById('noResults');
+    if(noResults) noResults.style.display = (visibleCount === 0 && cards.length > 0) ? 'block' : 'none';
   }
+
+  function updatePieceCount(){
+    applyFilters();
+  }
+
+  document.querySelectorAll('.filter-row-v2 span:not(.filter-count)').forEach(span=>{
+    span.addEventListener('click', ()=>{
+      document.querySelectorAll('.filter-row-v2 span:not(.filter-count)').forEach(s=>s.classList.remove('active'));
+      span.classList.add('active');
+      activeCategory = span.textContent.trim();
+      applyFilters();
+    });
+  });
+  document.getElementById('searchInput')?.addEventListener('input', applyFilters);
+
   const originalAddProduct = addProduct;
   addProduct = function(){ originalAddProduct(); updatePieceCount(); };
   const originalMakeEmptyState = makeEmptyState;

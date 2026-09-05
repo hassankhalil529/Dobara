@@ -15,14 +15,14 @@ router.get('/', async (req, res) => {
 // POST a new product
 router.post('/', async (req, res) => {
   try {
-    const { name, category, price, size, condition, photo, password } = req.body;
+    const { name, category, price, size, condition, photos, password } = req.body;
 
     // simple owner-password check
     if (password !== process.env.OWNER_PASSWORD) {
       return res.status(401).json({ error: 'Wrong password' });
     }
 
-    const newProduct = new Product({ name, category, price, size, condition, photo });
+    const newProduct = new Product({ name, category, price, size, condition, photos });
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (err) {
