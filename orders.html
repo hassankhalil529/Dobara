@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders — Dobara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Jost:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#1E1A17;
+    --charcoal-2:#2A2420;
+    --kraft:#F1E7D3;
+    --kraft-dim:#D9CBAE;
+    --mustard:#C9973F;
+    --mustard-soft:#E0B96A;
+    --rust:#A6491F;
+    --sage:#7C8863;
+    --glass-fill:rgba(241,231,211,0.07);
+    --glass-fill-2:rgba(241,231,211,0.12);
+    --glass-border:rgba(241,231,211,0.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    min-height:100vh;background:var(--charcoal);color:var(--kraft);
+    font-family:'Jost',sans-serif;font-weight:300;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- password gate ---------- */
+  .gate{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:radial-gradient(ellipse at 50% 30%, rgba(201,151,63,0.08), transparent 60%), var(--charcoal);
+  }
+  .gate-card{
+    width:100%;max-width:400px;background:var(--glass-fill);border:1px solid var(--glass-border);
+    border-radius:22px;padding:40px 34px;backdrop-filter:blur(14px);
+    box-shadow:0 30px 80px rgba(0,0,0,0.5);
+  }
+  .brand{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.08em;margin-bottom:22px;}
+  .brand span{color:var(--mustard);}
+  .gate-title{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--kraft);}
+  .gate-sub{margin-top:6px;font-size:13px;color:var(--kraft-dim);margin-bottom:26px;}
+  .field{margin-bottom:18px;}
+  .field label{
+    display:block;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--mustard-soft);margin-bottom:8px;
+  }
+  .field input{
+    width:100%;background:rgba(0,0,0,0.2);border:1px solid var(--glass-border);
+    border-radius:12px;padding:14px 16px;color:var(--kraft);font-family:'Jost';font-size:14px;
+  }
+  .field input:focus{outline:none;border-color:var(--mustard);}
+  .gate-error{display:none;color:var(--rust);font-size:12px;margin:-8px 0 16px;font-family:'Space Mono',monospace;}
+  .gate-error.show{display:block;}
+  .shake{animation:shake 0.4s;}
+  @keyframes shake{
+    0%,100%{transform:translateX(0);} 20%{transform:translateX(-8px);} 40%{transform:translateX(8px);}
+    60%{transform:translateX(-6px);} 80%{transform:translateX(6px);}
+  }
+  .btn-submit{
+    width:100%;background:var(--mustard);color:var(--charcoal);border:none;
+    padding:15px 0;border-radius:12px;font-family:'Jost';font-weight:600;font-size:14px;
+    cursor:pointer;transition:transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow:0 14px 30px rgba(201,151,63,0.25);
+  }
+  .btn-submit:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(201,151,63,0.38);}
+
+  /* ---------- dashboard ---------- */
+  .dash{display:none;max-width:920px;margin:0 auto;padding:50px 5% 100px;}
+  .dash.show{display:block;}
+  .dash-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:34px;flex-wrap:wrap;gap:16px;}
+  .dash-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,5vw,46px);color:var(--kraft);}
+  .dash-count{font-family:'Space Mono',monospace;font-size:12px;color:var(--mustard-soft);letter-spacing:0.1em;}
+  .back-link{font-size:13px;color:var(--kraft-dim);transition:color 0.25s ease;}
+  .back-link:hover{color:var(--mustard-soft);}
+  .refresh-btn{
+    border:1px solid var(--glass-border);background:var(--glass-fill);color:var(--kraft);
+    padding:9px 18px;border-radius:999px;font-size:13px;cursor:pointer;transition:all 0.3s ease;
+  }
+  .refresh-btn:hover{background:var(--glass-fill-2);border-color:var(--mustard-soft);}
+
+  .order-card{
+    background:var(--charcoal-2);border:1px solid var(--glass-border);border-radius:18px;
+    padding:22px;margin-bottom:18px;display:flex;gap:18px;flex-wrap:wrap;
+  }
+  .order-photo{width:78px;height:78px;border-radius:12px;object-fit:cover;flex-shrink:0;background:var(--glass-fill);}
+  .order-main{flex:1;min-width:220px;}
+  .order-name{font-size:17px;color:var(--kraft);}
+  .order-price{font-family:'Space Mono',monospace;font-size:13px;color:var(--mustard-soft);margin-top:4px;}
+  .order-buyer{margin-top:12px;font-size:13px;color:var(--kraft-dim);line-height:1.8;}
+  .order-buyer strong{color:var(--kraft);font-weight:500;}
+  .order-meta-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+  .pill{
+    font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:0.06em;
+    padding:5px 12px;border-radius:999px;border:1px solid var(--glass-border);color:var(--kraft-dim);
+  }
+  .pill.payment-Easypaisa{border-color:rgba(201,151,63,0.4);color:var(--mustard-soft);}
+  .pill.status-Pending{border-color:rgba(166,73,31,0.4);color:#e08a5c;}
+  .pill.status-Confirmed{border-color:rgba(124,136,99,0.5);color:#a8b58f;}
+  .pill.status-Delivered{border-color:rgba(201,151,63,0.5);color:var(--mustard-soft);background:rgba(201,151,63,0.08);}
+
+  .order-actions{display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:150px;}
+  .status-btn{
+    border:1px solid var(--glass-border);background:var(--glass-fill);color:var(--kraft);
+    padding:9px 14px;border-radius:10px;font-size:12.5px;cursor:pointer;transition:all 0.25s ease;text-align:left;
+  }
+  .status-btn:hover{background:var(--glass-fill-2);border-color:var(--mustard-soft);}
+  .status-btn.active{background:var(--mustard);color:var(--charcoal);border-color:var(--mustard);font-weight:600;}
+
+  .empty-orders{
+    text-align:center;padding:80px 20px;border:1px dashed var(--glass-border);border-radius:18px;
+    color:var(--kraft-dim);font-size:14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Password gate -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="brand">DO<span>BARA</span></div>
+    <div class="gate-title">Owner login</div>
+    <div class="gate-sub">Enter the shop password to view orders.</div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="gatePwInput" placeholder="••••••••">
+    </div>
+    <div class="gate-error" id="gateError">Wrong password — try again.</div>
+    <button class="btn-submit" onclick="unlock()">View Orders</button>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div class="dash" id="dash">
+  <div class="dash-header">
+    <div>
+      <a href="index.html" class="back-link">← Back to shop</a>
+      <div class="dash-title">Orders</div>
+      <div class="dash-count" id="orderCount">0 ORDERS</div>
+    </div>
+    <button class="refresh-btn" onclick="loadOrders()">↻ Refresh</button>
+  </div>
+  <div id="ordersList"></div>
+</div>
+
+<script>
+  const API_BASE = 'https://dobara-bx6m.onrender.com';
+  let ownerPassword = '';
+
+  document.getElementById('gatePwInput').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') unlock();
+  });
+
+  async function unlock(){
+    const val = document.getElementById('gatePwInput').value;
+    if(!val){
+      showGateError();
+      return;
+    }
+    ownerPassword = val;
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('dash').classList.add('show');
+    loadOrders();
+  }
+
+  function showGateError(){
+    const errorEl = document.getElementById('gateError');
+    const cardEl = document.querySelector('.gate-card');
+    errorEl.classList.add('show');
+    cardEl.classList.remove('shake'); void cardEl.offsetWidth; cardEl.classList.add('shake');
+  }
+
+  async function loadOrders(){
+    const list = document.getElementById('ordersList');
+    list.innerHTML = '<div class="empty-orders">Loading orders…</div>';
+    try{
+      const res = await fetch(`${API_BASE}/api/orders?password=${encodeURIComponent(ownerPassword)}`);
+      if(res.status === 401){
+        // password was wrong — send back to gate
+        document.getElementById('dash').classList.remove('show');
+        document.getElementById('gate').style.display = 'flex';
+        showGateError();
+        return;
+      }
+      const orders = await res.json();
+      renderOrders(orders);
+    } catch(err){
+      list.innerHTML = '<div class="empty-orders">Backend se connect nahi ho pa raha. Thodi der mein dobara try karo (free server ko jaagne mein waqt lagta hai).</div>';
+    }
+  }
+
+  function renderOrders(orders){
+    const list = document.getElementById('ordersList');
+    document.getElementById('orderCount').textContent = `${orders.length} ${orders.length === 1 ? 'ORDER' : 'ORDERS'}`;
+
+    if(orders.length === 0){
+      list.innerHTML = '<div class="empty-orders">Abhi tak koi order nahi aaya.</div>';
+      return;
+    }
+
+    list.innerHTML = orders.map(order => {
+      const total = (parseFloat(order.productPrice) || 0) + (order.deliveryCharge || 320);
+      const date = new Date(order.createdAt).toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
+      return `
+        <div class="order-card">
+          <img class="order-photo" src="${order.productPhoto || ''}" alt="">
+          <div class="order-main">
+            <div class="order-name">${order.productName}</div>
+            <div class="order-price">Rs. ${order.productPrice} + Rs. ${order.deliveryCharge || 320} delivery = Rs. ${total}</div>
+            <div class="order-buyer">
+              <strong>${order.buyerName}</strong> &middot; ${order.buyerPhone}<br>
+              ${order.buyerAddress}<br>
+              ${date}
+            </div>
+            <div class="order-meta-row">
+              <span class="pill payment-${order.paymentMethod}">${order.paymentMethod}</span>
+              <span class="pill status-${order.status}">${order.status}</span>
+            </div>
+          </div>
+          <div class="order-actions">
+            <button class="status-btn ${order.status === 'Pending' ? 'active' : ''}" onclick="updateStatus('${order._id}','Pending')">Pending</button>
+            <button class="status-btn ${order.status === 'Confirmed' ? 'active' : ''}" onclick="updateStatus('${order._id}','Confirmed')">Confirmed</button>
+            <button class="status-btn ${order.status === 'Delivered' ? 'active' : ''}" onclick="updateStatus('${order._id}','Delivered')">Delivered</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function updateStatus(id, status){
+    try{
+      const res = await fetch(`${API_BASE}/api/orders/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, password: ownerPassword })
+      });
+      if(!res.ok){
+        alert('Status update nahi ho saka.');
+        return;
+      }
+      loadOrders();
+    } catch(err){
+      alert('Backend se connect nahi ho pa raha.');
+    }
+  }
+</script>
+
+</body>
+</html>
