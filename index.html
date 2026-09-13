@@ -181,6 +181,54 @@
   }
   .btn-signin:hover{background:var(--mustard);color:var(--charcoal);border-color:var(--mustard);transform:translateY(-2px);}
 
+  /* ---------- floating instagram button ---------- */
+  .fab-instagram{
+    position:fixed;bottom:26px;right:26px;z-index:150;
+    width:52px;height:52px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(155deg, var(--mustard), var(--rust));
+    color:var(--charcoal);
+    box-shadow:0 14px 32px rgba(0,0,0,0.4);
+    transition:transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease;
+  }
+  .fab-instagram:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 20px 42px rgba(0,0,0,0.5);}
+
+  /* ---------- hamburger ---------- */
+  .menu-toggle{
+    display:none;flex-direction:column;justify-content:center;gap:5px;
+    width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-border);
+    background:var(--glass-fill);cursor:pointer;transition:all 0.3s ease;
+  }
+  .menu-toggle span{
+    display:block;width:16px;height:1.5px;background:var(--kraft);margin:0 auto;
+    transition:transform 0.3s ease, opacity 0.3s ease;
+  }
+  .menu-toggle:hover{border-color:var(--mustard-soft);}
+  .menu-toggle.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+  .menu-toggle.open span:nth-child(2){opacity:0;}
+  .menu-toggle.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+  .mobile-nav{
+    position:fixed;top:0;right:0;bottom:0;width:min(78vw,320px);z-index:200;
+    background:var(--charcoal-2);border-left:1px solid var(--glass-border);
+    display:flex;flex-direction:column;gap:6px;padding:100px 28px 40px;
+    transform:translateX(100%);transition:transform 0.4s cubic-bezier(.2,.8,.2,1);
+    box-shadow:-20px 0 60px rgba(0,0,0,0.4);
+  }
+  .mobile-nav.open{transform:translateX(0);}
+  .mobile-nav a{
+    padding:14px 4px;border-bottom:1px solid var(--glass-border);
+    font-size:15px;color:var(--kraft);letter-spacing:0.02em;
+  }
+  .mobile-nav a.btn-signin{
+    margin-top:14px;text-align:center;border-radius:999px;border:1px solid var(--glass-border);
+  }
+  .mobile-nav-backdrop{
+    position:fixed;inset:0;z-index:199;background:rgba(10,8,6,0.6);backdrop-filter:blur(3px);
+    opacity:0;pointer-events:none;transition:opacity 0.35s ease;
+  }
+  .mobile-nav-backdrop.show{opacity:1;pointer-events:auto;}
+
   /* ---------- hero ---------- */
   .hero{
     position:relative;min-height:100vh;
@@ -512,6 +560,7 @@
 
   @media(max-width:900px){
     nav ul{display:none;}
+    .menu-toggle{display:flex;}
     .grid{grid-template-columns:1fr;}
     .steps{grid-template-columns:1fr;}
     .hero-inner{flex-direction:column;align-items:flex-start;}
@@ -995,7 +1044,28 @@ footer{padding:42px 6%}
       <li><a class="btn-signin" href="login.html">Sign In</a></li>
     </ul>
   </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+
+<a href="https://www.instagram.com/thrift_x_dobara?stkn=ZHB1bGgwMm1kOGFj" target="_blank" rel="noopener" class="fab-instagram" aria-label="Instagram">
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+  </svg>
+</a>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#shop">Shop</a>
+  <a href="#how">How it works</a>
+  <a href="#stories">Stories</a>
+  <a href="https://www.instagram.com/thrift_x_dobara?stkn=ZHB1bGgwMm1kOGFj" target="_blank" rel="noopener">Instagram</a>
+  <a href="orders.html">Orders</a>
+  <a class="btn-signin" href="login.html">Sign In</a>
+</div>
 
 <section class="hero hero-v2">
   <div class="hero-noise"></div>
@@ -1263,6 +1333,7 @@ footer{padding:42px 6%}
     <li><a href="#how">How it works</a></li>
     <li><a href="login.html">Sign In</a></li>
     <li><a href="orders.html">Orders</a></li>
+    <li><a href="https://www.instagram.com/thrift_x_dobara?stkn=ZHB1bGgwMm1kOGFj" target="_blank" rel="noopener">Instagram</a></li>
   </ul>
   <div class="footer-note">MADE WITH CARE IN RAWALPINDI</div>
 </footer>
@@ -1644,6 +1715,30 @@ footer{padding:42px 6%}
     return div;
   }
 
+
+  // mobile hamburger menu
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+
+  function closeMobileNav(){
+    menuToggle.classList.remove('open');
+    mobileNav.classList.remove('open');
+    mobileNavBackdrop.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  function openMobileNav(){
+    menuToggle.classList.add('open');
+    mobileNav.classList.add('open');
+    mobileNavBackdrop.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  menuToggle?.addEventListener('click', ()=>{
+    if(mobileNav.classList.contains('open')) closeMobileNav();
+    else openMobileNav();
+  });
+  mobileNavBackdrop?.addEventListener('click', closeMobileNav);
+  mobileNav?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobileNav));
 
   // header shrink on scroll
   const header = document.querySelector('header');
